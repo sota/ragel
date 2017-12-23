@@ -1,150 +1,54 @@
 include 'ragel.lm'
-include 'ragel-c.lm'
-include 'ragel-ocaml.lm'
-include 'ragel-ruby.lm'
-include 'ragel-crack.lm'
+include 'host.lm'
 
 lex
 	token selectt /''/
 	{
-		if Lang == "ruby"
-			input->push( make_token( typeid<ruby_select_section>, '' ) )
-		elsif Lang == "ocaml"
-			input->push( make_token( typeid<ocaml_select_section>, '' ) )
-		elsif Lang == "crack"
-			input->push( make_token( typeid<crack_select_section>, '' ) )
-		else
-			input->push( make_token( typeid<c_select_section>, '' ) )
+		input->push( make_token( typeid<c_select_section>, '' ) )
 	}
 
 	token c_select_section //
-	token ruby_select_section //
-	token ocaml_select_section //
-	token crack_select_section //
 end
 
 def start
-	[c_select_section SectionList: c_host::section*]
-|	[ruby_select_section RSectionList: ruby_host::section*]
-|	[ocaml_select_section OSectionList: ocaml_host::section*]
-|	[crack_select_section OSectionList: crack_host::section*]
+	[c_select_section SectionList: host::section*]
 
 def import_val
-	[c_host::number] :Number
-|	[c_host::string] :String
+	[host::number] :Number
+|	[host::string] :String
 
 def import
-	[Name: c_host::ident Val: import_val]
+	[Name: host::ident Val: import_val] :Import
 
 export RagelTree: start
 export RagelError: str
 export RagelImport: import*
 
-import* import( FileName: str, Start: start )
-{
-	ImportList: import* = cons import* []
+A: list_el<str>
 
-	for Pref: c_host::section* in RagelTree { 
-		if match Pref [
-			"#define " Word: c_host::ident c_host::whitespace
-			Number: c_host::number c_host::section*
-		]
-		{
-			ImportList = cons import*[ Word Number ImportList ]
-		}
-
-		if match Pref [
-			Word: c_host::ident c_host::whitespace
-			"=" c_host::whitespace
-			Number: c_host::number c_host::section*
-		]
-		{
-			ImportList = cons import*[ Word Number ImportList ]
-		}
-
-		if match Pref [
-			"#define " Word: c_host::ident c_host::whitespace
-			String: c_host::string c_host::section*
-		]
-		{
-			ImportList = cons import*[ Word String ImportList ]
-		}
-
-		if match Pref [
-			Word: c_host::ident c_host::whitespace
-			"=" c_host::whitespace
-			String: c_host::string c_host::section*
-		]
-		{
-			ImportList = cons import*[ Word String ImportList ]
-		}
-	}
-
-	return ImportList
-}
-
-# Command.
-A: list_el<str> = argv->pop_head_el()
-Cmd: str = A->value
-
-# File name. The open is expected to succeed. The open is tested before the
-# colm program is called.
+# File name. The open is expected to succeed. It is tested before the colm
+# program is called.
 A = argv->pop_head_el()
 FileName: str = A->value
 
-# Language.
+# Import
 A = argv->pop_head_el()
-Lang = A->value
+GblImport = atoi( A->value ) != 0
 
-GblSectionPass = false
+# IncludeDepth
+A = argv->pop_head_el()
+GblIncludeDepth = atoi( A->value )
 
-if ( Cmd == 'import-file' ) {
-	Stream: stream = open( FileName, "r" )
-	RagelTree = parse start[ Stream ]
-	RagelImport = import( FileName, RagelTree )
-	RagelError = error
-}
-else if ( Cmd == 'parse-file' ) {
-	Stream: stream = open( FileName, "r" )
-	RagelTree = parse start[ Stream ]
-	RagelError = error
-}
-else if ( Cmd == 'include-reduce-file' ) {
-	Stream: stream = open( FileName, "r" )
-	reduce IncludePass start[ Stream ]
-	RagelError = error
-}
-else if ( Cmd == 'include-reduce-str' ) {
-	A = argv->pop_head_el()
-	Data: str = A->value
-	reduce IncludePass start[ Data ]
-	RagelError = error
-}
-else if ( Cmd == 'toplevel-reduce-file' ) {
-	Stream: stream = open( FileName, "r" )
-	reduce TopLevel start[ Stream ]
-	RagelError = error
-}
-else if ( Cmd == 'toplevel-reduce-str' ) {
-	A = argv->pop_head_el()
-	Data: str = A->value
-	reduce TopLevel start[ Data ]
-	RagelError = error
-}
-else if ( Cmd == 'section-reduce-file' ) {
-	GblSectionPass = true
+# TargetMachine
+A = argv->pop_head_el()
+GblTargetMachine = A->value
 
-	Stream: stream = open( FileName, "r" )
-	reduce SectionPass start[ Stream ]
-	RagelError = error
-}
-else if ( Cmd == 'section-reduce-str' ) {
-	GblSectionPass = true
+# SearchMachine
+A = argv->pop_head_el()
+GblSearchMachine = A->value
 
-	A = argv->pop_head_el()
-	Data: str = A->value
-	reduce SectionPass start[ Data ]
-	RagelError = error
-}
+Stream: stream = open( FileName, "r" )
+reduce TopLevel start[ Stream ]
+RagelError = error
 
 include 'reducer.lm'

@@ -1,22 +1,23 @@
 /*
- *  Copyright 2014-2015 Adrian Thurston <thurston@complang.org>
- */
-
-/*  This file is part of Ragel.
+ * Copyright 2014-2015 Adrian Thurston <thurston@colm.net>
  *
- *  Ragel is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- * 
- *  Ragel is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with Ragel; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #include "ragel.h"
@@ -1265,13 +1266,19 @@ unsigned int AsmCodeGen::EOF_ACTION( RedStateAp *state )
 
 bool AsmCodeGen::useAgainLabel()
 {
-	return redFsm->anyRegActionRets() || 
-			redFsm->anyRegActionByValControl() || 
+	return redFsm->anyActionRets() || 
+			redFsm->anyActionByValControl() ||
 			redFsm->anyRegNextStmt();
 }
 
 void AsmCodeGen::GOTO( ostream &ret, int gotoDest, bool inFinish )
 {
+	if ( inFinish && !noEnd ) {
+		out <<
+			"	cmpq	" << P() << ", " << PE() << "\n"
+			"	je	" << LABEL( "test_eof", gotoDest ) << "\n";
+	}
+
 	ret <<
 		"	jmp		" << LABEL( "st", gotoDest ) << "\n";
 }
@@ -1287,6 +1294,16 @@ void AsmCodeGen::CALL( ostream &ret, int callDest, int targState, bool inFinish 
 		"	movq	$" << targState << ", (%rax, %rcx, 8)\n"
 		"	addq	$1, %rcx\n"
 		"	movq	%rcx, " << TOP() << "\n"
+	;
+
+	if ( inFinish && !noEnd ) {
+		out <<
+			"	cmpq	" << P() << ", " << PE() << "\n"
+			"	je	" << LABEL( "test_eof", callDest ) << "\n";
+	}
+
+
+	ret <<
 		"	jmp		" << LABEL( "st", callDest ) << "\n";
 	;
 }
@@ -1308,6 +1325,16 @@ void AsmCodeGen::CALL_EXPR( ostream &ret, GenInlineItem *ilItem, int targState, 
 		"	addq	$1, %rcx\n"
 		"	movq	%rcx, " << TOP() << "\n"
 		"	movq	%rdx, " << vCS() << "\n"
+	;
+
+	if ( inFinish && !noEnd ) {
+		out <<
+			"	cmpq	" << P() << ", " << PE() << "\n"
+			"	je	" << LABEL( "test_eof" ) << "\n";
+	}
+
+
+	ret <<
 		"	jmp		" << LABEL( "again" ) << "\n";
 }
 
@@ -1324,6 +1351,12 @@ void AsmCodeGen::RET( ostream &ret, bool inFinish )
 	if ( red->postPopExpr != 0 )
 		INLINE_LIST( ret, red->postPopExpr->inlineList, 0, false, false );
 
+	if ( inFinish && !noEnd ) {
+		out <<
+			"	cmpq	" << P() << ", " << PE() << "\n"
+			"	je	" << LABEL( "test_eof" ) << "\n";
+	}
+
 	ret <<
 		"	jmp		" << LABEL("again") << "\n";
 }
@@ -1333,6 +1366,12 @@ void AsmCodeGen::GOTO_EXPR( ostream &ret, GenInlineItem *ilItem, bool inFinish )
 	ret << "	movq	";
 	INLINE_LIST( ret, ilItem->children, 0, inFinish, false );
 	ret << ", " << vCS() << "\n";
+
+	if ( inFinish && !noEnd ) {
+		out <<
+			"	cmpq	" << P() << ", " << PE() << "\n"
+			"	je	" << LABEL( "test_eof" ) << "\n";
+	}
 
 	ret <<
 		"	jmp		" << LABEL("again") << "\n";
@@ -1816,6 +1855,13 @@ void AsmCodeGen::setLabelsNeeded()
 
 		for ( CondApSet::Iter cond = redFsm->condSet; cond.lte(); cond++ )
 			setLabelsNeeded( &cond->p );
+
+		for ( RedStateList::Iter st = redFsm->stateList; st.lte(); st++ ) {
+			if ( st->eofAction != 0 ) {
+				for ( GenActionTable::Iter item = st->eofAction->key; item.lte(); item++ )
+					setLabelsNeeded( item->value->inlineList );
+			}
+		}
 	}
 
 	if ( !noEnd ) {

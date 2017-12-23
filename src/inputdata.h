@@ -1,22 +1,23 @@
 /*
- *  Copyright 2008 Adrian Thurston <thurston@complang.org>
- */
-
-/*  This file is part of Ragel.
+ * Copyright 2008 Adrian Thurston <thurston@colm.net>
  *
- *  Ragel is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- * 
- *  Ragel is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with Ragel; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #ifndef _INPUT_DATA
@@ -164,8 +165,6 @@ struct IncludeRec
 
 };
 
-typedef AvlTree<IncludeRec, FnMachine, CmpFnMachine> IncludeDict;
-
 struct InputData
 :
 	public FsmGbl
@@ -194,8 +193,6 @@ struct InputData
 		rlhcShowCmd(false),
 		noIntermediate(false),
 		frontendSpecified(false),
-		backendSpecified(false),
-		featureSpecified(false),
 		saveTemps(false),
 		condsCheckDepth(-1),
 		transSpanDepth(6),
@@ -281,10 +278,6 @@ struct InputData
 	bool frontendSpecified;
 	RagelFrontend frontend;
 
-	bool backendSpecified;
-
-	bool featureSpecified;
-
 	bool saveTemps;
 	long condsCheckDepth;
 	long transSpanDepth;
@@ -292,8 +285,6 @@ struct InputData
 	bool checkBreadth;
 
 	bool varBackend;
-
-	IncludeDict includeDict;
 
 	const char *histogramFn;
 	double *histogram;
@@ -317,17 +308,8 @@ struct InputData
 	void prepareSingleMachine();
 	void prepareAllMachines();
 
-	void cdDefaultFileName( const char *inputFile );
-	void goDefaultFileName( const char *inputFile );
-	void javaDefaultFileName( const char *inputFile );
-	void rubyDefaultFileName( const char *inputFile );
-	void csharpDefaultFileName( const char *inputFile );
-	void ocamlDefaultFileName( const char *inputFile );
-	void crackDefaultFileName( const char *inputFile );
+	void cDefaultFileName( const char *inputFile );
 	void asmDefaultFileName( const char *inputFile );
-	void rustDefaultFileName( const char *inputFile );
-	void juliaDefaultFileName( const char *inputFile );
-	void jsDefaultFileName( const char *inputFile );
 
 	void writeOutput( InputItem *ii );
 	void writeLanguage( std::ostream &out );
@@ -336,8 +318,6 @@ struct InputData
 
 	void parseKelbt();
 	void processDot();
-	void processCode();
-	void processCodeEarly();
 
 	void writeDot( std::ostream &out );
 

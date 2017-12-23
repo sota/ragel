@@ -1,3 +1,25 @@
+/*
+ * Copyright 2001-2006 Adrian Thurston <thurston@colm.net>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 #include <colm/pdarun.h>
 #include <colm/bytecode.h>
 #include <colm/defs.h>
@@ -26,15 +48,14 @@ char *unescape( const char *s, int slen );
 char *unescape( const char *s );
 
 struct SectionPass;
-struct IncludePass;
 
 struct TopLevel
 {
-	TopLevel( InputData *id, SectionPass *sectionPass, const HostLang *hostLang,
+	TopLevel( InputData *id, const HostLang *hostLang,
 			MinimizeLevel minimizeLevel, MinimizeOpt minimizeOpt )
 	:
 		id(id),
-		sectionPass(sectionPass),
+		section(0),
 		pd(0),
 		machineSpec(0),
 		machineName(0),
@@ -47,13 +68,14 @@ struct TopLevel
 		targetMachine(0),
 		searchMachine(0),
 		paramList(0),
-		success(true)
+		success(true),
+		isImport(false)
 	{
 		exportContext.append( false );
 	}
 
 	InputData *id;
-	
+	Section *section;
 	SectionPass *sectionPass;
 	ParseData *pd;
 	char *machineSpec;
@@ -80,63 +102,16 @@ struct TopLevel
 			struct pda_run *pda_run, parse_tree_t *pt );
 
 	void loadMachineName( string data );
-	void tryMachineDef( InputLoc &loc, std::string name, 
+	void tryMachineDef( const InputLoc &loc, std::string name, 
 			MachineDef *machineDef, bool isInstance );
 	long tryLongScan( const InputLoc &loc, const char *data );
-	void loadImport( std::string fileName );
-	void include( const InputLoc &incLoc, string fileName, string machine );
-
-	void reduceFile( const char *inputFileName );
-	void reduceStr( const char *inputFileName, const char *input );
-	void topReduce( const char *inputFileName );
-
-	void loadIncludeData( IncludeRec *el, IncludePass &includePass, const string &fileName );
 	void include( const InputLoc &incLoc, bool fileSpecified, string fileName, string machine );
-};
+	void reduceFile( const char *inputFileName, bool import );
 
-struct SectionPass
-{
-	SectionPass( InputData *id )
-	:
-		id(id),
-		section(0)
-	{
-	}
+	void import( const InputLoc &loc, std::string name, Literal *literal );
+	void importFile( std::string fileName );
 
-	InputData *id;
-	Section *section;
-
-	void reduceFile( const char *inputFileName );
-	void reduceStr( const char *inputFileName, const char *input );
-
-	/* Generated and called by colm. */
-	void commit_reduce_forward( program_t *prg, tree_t **root,
-			struct pda_run *pda_run, parse_tree_t *pt );
-};
-
-struct IncludePass
-{
-	IncludePass( InputData *id, const string targetMachine )
-	:
-		id(id),
-		targetMachine(targetMachine),
-		section(0)
-	{
-	}
-
-	InputData *id;
-	const string targetMachine;
-	string sectionMachine;
-	Section *section;
-	IncItemList incItems;
-	SectionDict sectionDict2;
-
-	void reduceFile( const char *inputFileName, const HostLang *hostLang );
-	void reduceStr( const char *inputFileName, const HostLang *hostLang, const char *input );
-
-	/* Generated and called by colm. */
-	void commit_reduce_forward( program_t *prg, tree_t **root,
-			struct pda_run *pda_run, parse_tree_t *pt );
+	bool isImport;
 };
 
 #endif

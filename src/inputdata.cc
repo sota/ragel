@@ -1,22 +1,23 @@
 /*
- *  Copyright 2008-2016 Adrian Thurston <thurston@complang.org>
- */
-
-/*  This file is part of Ragel.
+ * Copyright 2008-2016 Adrian Thurston <thurston@colm.net>
  *
- *  Ragel is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- * 
- *  Ragel is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with Ragel; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #include "ragel.h"
@@ -37,11 +38,8 @@ using std::ostream;
 using std::endl;
 using std::ios;
 
-extern colm_sections rlhc_object;
-
 InputData::~InputData()
 {
-	includeDict.empty();
 	inputItems.empty();
 	parseDataList.empty();
 	sectionList.empty();
@@ -69,7 +67,7 @@ InputData::~InputData()
 }
 
 /* Invoked by the parser when the root element is opened. */
-void InputData::cdDefaultFileName( const char *inputFile )
+void InputData::cDefaultFileName( const char *inputFile )
 {
 	/* If the output format is code and no output file name is given, then
 	 * make a default. */
@@ -81,71 +79,11 @@ void InputData::cdDefaultFileName( const char *inputFile )
 			const char *defExtension = 0;
 			switch ( hostLang->lang ) {
 				case HostLang::C: defExtension = ".c"; break;
-				case HostLang::D: defExtension = ".d"; break;
 				default: break;
 			}
 			outputFileName = fileNameFromStem( inputFile, defExtension );
 		}
 	}
-}
-
-/* Invoked by the parser when the root element is opened. */
-void InputData::goDefaultFileName( const char *inputFile )
-{
-	/* If the output format is code and no output file name is given, then
-	 * make a default. */
-	if ( outputFileName == 0 )
-		outputFileName = fileNameFromStem( inputFile, ".go" );
-}
-
-/* Invoked by the parser when the root element is opened. */
-void InputData::javaDefaultFileName( const char *inputFile )
-{
-	/* If the output format is code and no output file name is given, then
-	 * make a default. */
-	if ( outputFileName == 0 )
-		outputFileName = fileNameFromStem( inputFile, ".java" );
-}
-
-/* Invoked by the parser when the root element is opened. */
-void InputData::rubyDefaultFileName( const char *inputFile )
-{
-	/* If the output format is code and no output file name is given, then
-	 * make a default. */
-	if ( outputFileName == 0 )
-		outputFileName = fileNameFromStem( inputFile, ".rb" );
-}
-
-/* Invoked by the parser when the root element is opened. */
-void InputData::csharpDefaultFileName( const char *inputFile )
-{
-	/* If the output format is code and no output file name is given, then
-	 * make a default. */
-	if ( outputFileName == 0 ) {
-		const char *ext = findFileExtension( inputFile );
-		if ( ext != 0 && strcmp( ext, ".rh" ) == 0 )
-			outputFileName = fileNameFromStem( inputFile, ".h" );
-		else
-			outputFileName = fileNameFromStem( inputFile, ".cs" );
-	}
-}
-
-/* Invoked by the parser when the root element is opened. */
-void InputData::ocamlDefaultFileName( const char *inputFile )
-{
-	/* If the output format is code and no output file name is given, then
-	 * make a default. */
-	if ( outputFileName == 0 )
-		outputFileName = fileNameFromStem( inputFile, ".ml" );
-}
-
-/* Invoked by the parser when the root element is opened. */
-void InputData::crackDefaultFileName( const char *inputFile )
-{
-	/* If the output format is code and no output file name is given, then
-	 * make a default. */
-	if ( outputFileName == 0 )
-		outputFileName = fileNameFromStem( inputFile, ".crk" );
 }
 
 void InputData::asmDefaultFileName( const char *inputFile )
@@ -154,62 +92,14 @@ void InputData::asmDefaultFileName( const char *inputFile )
         outputFileName = fileNameFromStem( inputFile, ".s" );
 }
 
-void InputData::rustDefaultFileName( const char *inputFile )
-{
-	if ( outputFileName == 0 )
-		outputFileName = fileNameFromStem( inputFile, ".rs" );
-}
-
-void InputData::juliaDefaultFileName( const char *inputFile )
-{
-	if ( outputFileName == 0 )
-		outputFileName = fileNameFromStem( inputFile, ".jl" );
-}
-
-void InputData::jsDefaultFileName( const char *inputFile )
-{
-	/* If the output format is code and no output file name is given, then
-	 * make a default. */
-	if ( outputFileName == 0 )
-		outputFileName = fileNameFromStem( inputFile, ".js" );
-}
-
 void InputData::makeDefaultFileName()
 {
 	switch ( hostLang->lang ) {
 		case HostLang::C:
-		case HostLang::D:
-			cdDefaultFileName( inputFileName );
-			break;
-		case HostLang::Java:
-			javaDefaultFileName( inputFileName );
-			break;
-		case HostLang::Go:
-			goDefaultFileName( inputFileName );
-			break;
-		case HostLang::Ruby:
-			rubyDefaultFileName( inputFileName );
-			break;
-		case HostLang::CSharp:
-			csharpDefaultFileName( inputFileName );
-			break;
-		case HostLang::OCaml:
-			ocamlDefaultFileName( inputFileName );
-			break;
-		case HostLang::Crack:
-			crackDefaultFileName( inputFileName );
+			cDefaultFileName( inputFileName );
 			break;
 		case HostLang::Asm:
 			asmDefaultFileName( inputFileName );
-			break;
-		case HostLang::Rust:
-			rustDefaultFileName( inputFileName );
-			break;
-		case HostLang::Julia:
-			juliaDefaultFileName( inputFileName );
-			break;
-		case HostLang::JS:
-			jsDefaultFileName( inputFileName );
 			break;
 	}
 }
@@ -319,7 +209,7 @@ void InputData::verifyWriteHasData( InputItem *ii )
 {
 	if ( ii->type == InputItem::Write ) {
 		if ( ii->pd->cgd == 0 )
-			error( ii->loc ) << "no machine instantiations to write" << endl;
+			error( ii->loc ) << ii->pd->sectionName << ": no machine instantiations to write" << endl;
 	}
 }
 
@@ -339,25 +229,16 @@ void InputData::writeOutput( InputItem *ii )
 			break;
 		}
 		case InputItem::HostData: {
-			switch ( backend ) {
-				case Direct:
-					if ( hostLang->lang == HostLang::C ) {
-						if ( ii->loc.fileName != 0 ) {
-							if ( !noLineDirectives ) {
-								*outStream << "\n#line " << ii->loc.line <<
-										" \"" << ii->loc.fileName << "\"\n";
-							}
-						}
+			if ( hostLang->lang == HostLang::C ) {
+				if ( ii->loc.fileName != 0 ) {
+					if ( !noLineDirectives ) {
+						*outStream << "\n#line " << ii->loc.line <<
+								" \"" << ii->loc.fileName << "\"\n";
 					}
-						
-					*outStream << ii->data.str();
-					break;
-				case Translated:
-					openHostBlock( '@', this, *outStream, inputFileName, ii->loc.line );
-					translatedHostData( *outStream, ii->data.str() );
-					*outStream << "}@";
-					break;
+				}
 			}
+					
+			*outStream << ii->data.str();
 			break;
 		}
 		case InputItem::EndSection: {
@@ -402,79 +283,6 @@ void InputData::processDot()
 	openOutput();
 	writeDot( *outStream );
 	closeOutput();
-}
-
-void InputData::runRlhc()
-{
-	if ( backend != Translated || noIntermediate )
-		return;
-
-	string rlhc = dirName + "/rlhc " + 
-			origOutputFileName + " " +
-			genOutputFileName + " " +
-			hostLang->rlhcArg;
-
-	if ( rlhcShowCmd )
-		info() << rlhc << std::endl;
-
-	const char *argv[5];
-	argv[0] = "rlhc";
-	argv[1] = origOutputFileName.c_str();
-	argv[2] = genOutputFileName.c_str(); 
-	argv[3] = hostLang->rlhcArg;
-	argv[4] = 0;
-
-	colm_program *program = colm_new_program( &rlhc_object );
-	colm_set_debug( program, 0 );
-	colm_run_program( program, 4, argv );
-	int es = program->exit_status;
-
-	streamFileNames.append( colm_extract_fns( program ) );
-
-	colm_delete_program( program );
-
-	if ( !saveTemps )
-		unlink( genOutputFileName.c_str() );
-
-	/* Translation step shouldn't fail, but it can if there is an
-	 * internal error. Pass it up.  */
-	if ( es != 0 )
-		abortCompile( es );
-}
-
-void InputData::processCode()
-{
-	/* Compiles machines. */
-	prepareAllMachines();
-
-	if ( errorCount > 0 )
-		abortCompile( 1 );
-
-	makeDefaultFileName();
-
-	makeTranslateOutputFileName();
-
-	createOutputStream();
-
-	/* Generates the reduced machine, which we use to write output. */
-	generateReduced();
-
-	if ( errorCount > 0 )
-		abortCompile( 1 );
-
-	verifyWritesHaveData();
-
-	if ( errorCount > 0 )
-		abortCompile( 1 );
-
-	/*
-	 * From this point on we should not be reporting any errors.
-	 */
-
-	openOutput();
-	writeOutput();
-	closeOutput();
-	runRlhc();
 }
 
 bool InputData::checkLastRef( InputItem *ii )
@@ -539,19 +347,6 @@ bool InputData::checkLastRef( InputItem *ii )
 			/* Flush out. */
 			writeOutput( lastFlush );
 
-			/* If this is the last reference to a pd, we can now clear the
-			 * memory for it. */
-			if ( lastFlush->pd != 0 && lastFlush->section->lastReference == lastFlush ) {
-				if ( lastFlush->pd->instanceList.length() > 0 ) {
-					lastFlush->pd->clear();
-
-#ifdef WITH_RAGEL_KELBT
-					if ( lastFlush->parser != 0 )
-						lastFlush->parser->clear();
-#endif
-				}
-			}
-
 			lastFlush = lastFlush->next;
 		}
 	}
@@ -580,6 +375,13 @@ void InputData::terminateAllParsers( )
 
 void InputData::flushRemaining()
 {
+	InputItem *item = inputItems.head;
+
+	while ( item != 0 ) {
+		checkLastRef( item );
+		item = item->next;
+	}
+
 	/* Flush remaining items. */
 	while ( lastFlush != 0 ) {
 		/* Flush out. */
@@ -591,7 +393,7 @@ void InputData::flushRemaining()
 
 void InputData::makeTranslateOutputFileName()
 {
-	if ( backend == Translated ) {
+	if ( false ) {
 		origOutputFileName = outputFileName;
 		outputFileName = fileNameFromStem( inputFileName, ".ri" );
 		genOutputFileName = outputFileName;
@@ -673,42 +475,11 @@ void InputData::processKelbt()
 		parseKelbt();
 		flushRemaining();
 		closeOutput();
-		runRlhc();
 	}
 
 	assert( errorCount == 0 );
 }
 #endif
-
-void InputData::processColm()
-{
-	/*
-	 * Colm-based parser introduced in ragel 7. Uses more memory.
-	 */
-
-	/* Check input file. */
-	ifstream *inFile = new ifstream( inputFileName );
-	if ( ! inFile->is_open() )
-		error() << "could not open " << inputFileName << " for reading" << endp;
-	delete inFile;
-
-	makeFirstInputItem();
-
-	LoadRagel *lr = newLoadRagel( *this, hostLang, minimizeLevel, minimizeOpt );
-	loadRagel( lr, inputFileName );
-	deleteLoadRagel( lr );
-
-	/* Bail on above error. */
-	if ( errorCount > 0 )
-		abortCompile( 1 );
-
-	if ( generateDot )
-		processDot();
-	else 
-		processCode();
-
-	assert( errorCount == 0 );
-}
 
 bool InputData::parseReduce()
 {
@@ -716,39 +487,28 @@ bool InputData::parseReduce()
 	 * Colm-based reduction parser introduced in ragel 7. 
 	 */
 
-	SectionPass *sectionPass = new SectionPass( this );
-	TopLevel *topLevel = new TopLevel( this, sectionPass, hostLang,
+	TopLevel *topLevel = new TopLevel( this, hostLang,
 			minimizeLevel, minimizeOpt );
 
-	if ( ! inLibRagel ) {
-		/* Check input file. File is actually opened by colm code. We don't
-		 * need to perform the check if in libragel since it comes in via a
-		 * string. */
-		if ( input == 0 ) {
-			ifstream *inFile = new ifstream( inputFileName );
-			if ( ! inFile->is_open() )
-				error() << "could not open " << inputFileName << " for reading" << endp;
-			delete inFile;
-		}
+	/* Check input file. File is actually opened by colm code. We don't
+	 * need to perform the check if in libragel since it comes in via a
+	 * string. */
+	if ( input == 0 ) {
+		ifstream *inFile = new ifstream( inputFileName );
+		if ( ! inFile->is_open() )
+			error() << "could not open " << inputFileName << " for reading" << endp;
+		delete inFile;
 	}
 
-	makeFirstInputItem();
-
-	if ( inLibRagel )
-		sectionPass->reduceStr( inputFileName, input );
-	else
-		sectionPass->reduceFile( inputFileName );
-	
 	if ( errorCount )
 		return false;
 
+	makeFirstInputItem();
+	
 	curItem = inputItems.head;
 	lastFlush = inputItems.head;
 
-	if ( inLibRagel )
-		topLevel->reduceStr( inputFileName, input );
-	else
-		topLevel->reduceFile( inputFileName );
+	topLevel->reduceFile( inputFileName, false );
 
 	if ( errorCount )
 		return false;
@@ -756,8 +516,6 @@ bool InputData::parseReduce()
 	bool success = topLevel->success;
 
 	delete topLevel;
-	delete sectionPass;
-
 	return success;
 }
 
@@ -780,9 +538,8 @@ bool InputData::processReduce()
 
 		closeOutput();
 
-		if ( success )
-			runRlhc();
-
+		if ( !success && outputFileName != 0 )
+			unlink( outputFileName );
 		return success;
 	}
 }
@@ -794,10 +551,6 @@ bool InputData::process()
 #ifdef WITH_RAGEL_KELBT
 			processKelbt();
 #endif
-			return true;
-		}
-		case ColmBased: {
-			processColm();
 			return true;
 		}
 		case ReduceBased: {

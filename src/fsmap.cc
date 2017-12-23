@@ -1,22 +1,23 @@
 /*
- *  Copyright 2002-2004 Adrian Thurston <thurston@complang.org>
- */
-
-/*  This file is part of Ragel.
+ * Copyright 2002-2004 Adrian Thurston <thurston@colm.net>
  *
- *  Ragel is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- * 
- *  Ragel is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with Ragel; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #include "fsmgraph.h"
@@ -944,6 +945,34 @@ int FsmAp::comparePrior( const PriorTable &priorTable1, const PriorTable &priorT
 	return 0;
 }
 
+int FsmAp::compareCondListBitElim( const CondList &condList1, const CondList &condList2 )
+{
+	ValPairIter< PiList<CondAp> > outPair( condList1, condList2 );
+	for ( ; !outPair.end(); outPair++ ) {
+		switch ( outPair.userState ) {
+		case ValPairIter<CondAp>::RangeInS1: {
+			int compareRes = FsmAp::compareCondBitElimPtr<CondAp>( outPair.s1Tel.trans, 0 );
+			if ( compareRes != 0 )
+				return compareRes;
+			break;
+		}
+		case ValPairIter<CondAp>::RangeInS2: {
+			int compareRes = FsmAp::compareCondBitElimPtr<CondAp>( 0, outPair.s2Tel.trans );
+			if ( compareRes != 0 )
+				return compareRes;
+			break;
+		}
+		case ValPairIter<CondAp>::RangeOverlap: {
+			int compareRes = FsmAp::compareCondBitElimPtr<CondAp>( 
+					outPair.s1Tel.trans, outPair.s2Tel.trans );
+			if ( compareRes != 0 )
+				return compareRes;
+			break;
+		}}
+	}
+	return 0;
+}
+
 /* Compares two transitions according to priority and functions. Pointers
  * should not be null. Does not consider to state or from state.  Compare two
  * transitions according to the data contained in the transitions.  Data means
@@ -997,6 +1026,35 @@ int FsmAp::compareTransData( TransAp *trans1, TransAp *trans2 )
  * the base transition has no data, the default is to return equal. */
 template< class Trans > int FsmAp::compareCondData( Trans *trans1, Trans *trans2 )
 {
+	/* Compare the prior table. */
+	int cmpRes = CmpPriorTable::compare( trans1->priorTable, 
+			trans2->priorTable );
+	if ( cmpRes != 0 )
+		return cmpRes;
+
+	/* Compare longest match action tables. */
+	cmpRes = CmpLmActionTable::compare(trans1->lmActionTable, 
+			trans2->lmActionTable);
+	if ( cmpRes != 0 )
+		return cmpRes;
+	
+	/* Compare action tables. */
+	return CmpActionTable::compare(trans1->actionTable, 
+			trans2->actionTable);
+}
+
+/* Compares two transitions according to priority and functions. Pointers
+ * should not be null. Does not consider to state or from state.  Compare two
+ * transitions according to the data contained in the transitions.  Data means
+ * any properties added to user transitions that may differentiate them. Since
+ * the base transition has no data, the default is to return equal. */
+template< class Trans > int FsmAp::compareCondBitElim( Trans *trans1, Trans *trans2 )
+{
+	if ( trans1->toState < trans2->toState )
+		return -1;
+	else if ( trans1->toState > trans2->toState )
+		return 1;
+
 	/* Compare the prior table. */
 	int cmpRes = CmpPriorTable::compare( trans1->priorTable, 
 			trans2->priorTable );

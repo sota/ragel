@@ -1,22 +1,23 @@
 /*
- *  Copyright 2006-2007 Adrian Thurston <thurston@complang.org>
- */
-
-/*  This file is part of Ragel.
+ * Copyright 2006-2007 Adrian Thurston <thurston@colm.net>
  *
- *  Ragel is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- * 
- *  Ragel is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with Ragel; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #include "pcheck.h"
@@ -37,97 +38,6 @@ HostType hostTypesC[] =
 	{ "unsigned", "int",   "uint",    false,  true,  false,  0, 0,                  0, UINT_MAX,   sizeof(unsigned int) },
 	{ "long",     0,       "long",    true,   true,  false,  LONG_MIN,  LONG_MAX,   0, 0,          sizeof(long) },
 	{ "unsigned", "long",  "ulong",   false,  true,  false,  0, 0,                  0, ULONG_MAX,  sizeof(unsigned long) },
-};
-
-
-HostType hostTypesD[] =
-{
-	{ "byte",    0,  "byte",    true,   true,  false,  CHAR_MIN,  CHAR_MAX,    0, 0,           1 },
-	{ "ubyte",   0,  "ubyte",   false,  true,  false,  0, 0,                   0, UCHAR_MAX,   1 },
-	{ "char",    0,  "char",    false,  true,  false,  0, 0,                   0, UCHAR_MAX,   1 },
-	{ "short",   0,  "short",   true,   true,  false,  SHRT_MIN,  SHRT_MAX,    0, 0,           2 },
-	{ "ushort",  0,  "ushort",  false,  true,  false,  0, 0,                   0, USHRT_MAX,   2 },
-	{ "wchar",   0,  "wchar",   false,  true,  false,  0, 0,                   0, USHRT_MAX,   2 },
-	{ "int",     0,  "int",     true,   true,  false,  INT_MIN,   INT_MAX,     0, 0,           4 },
-	{ "uint",    0,  "uint",    false,  true,  false,  0, 0,                   0, UINT_MAX,    4 },
-	{ "dchar",   0,  "dchar",   false,  true,  false,  0, 0,                   0, UINT_MAX,    4 },
-};
-
-HostType hostTypesGo[] = 
-{
-	{ "byte",    0,  "uint8",   false,  true,  false,  0, 0,                    U8BIT_MIN,  U8BIT_MAX,   1 },
-	{ "int8",    0,  "int8",    true,   true,  false,  S8BIT_MIN,  S8BIT_MAX,   0, 0,                    1 },
-	{ "uint8",   0,  "uint8",   false,  true,  false,  0, 0,                    U8BIT_MIN,  U8BIT_MAX,   1 },
-	{ "int16",   0,  "int16",   true,   true,  false,  S16BIT_MIN, S16BIT_MAX,  0, 0,                    2 },
-	{ "uint16",  0,  "uint16",  false,  true,  false,  0, 0,                    U16BIT_MIN, U16BIT_MAX,  2 },
-	{ "int32",   0,  "int32",   true,   true,  false,  S32BIT_MIN, S32BIT_MAX,  0, 0,                    4 },
-	{ "uint32",  0,  "uint32",  false,  true,  false,  0, 0,                    U32BIT_MIN, U32BIT_MAX,  4 },
-	{ "int64",   0,  "int64",   true,   true,  false,  S64BIT_MIN, S64BIT_MAX,  0, 0,                    8 },
-	{ "uint64",  0,  "uint64",  false,  true,  false,  0, 0,                    U64BIT_MIN, U64BIT_MAX,  8 },
-	{ "rune",    0,  "int32",   true,   true,  true,   S32BIT_MIN, S32BIT_MAX,  0, 0,                    4 },
-};
-
-HostType hostTypesJava[] = 
-{
-	{ "byte",    0,  "byte",   true,   true,  false,  CHAR_MIN,  CHAR_MAX,    0, 0,           1 },
-	{ "short",   0,  "short",  true,   true,  false,  SHRT_MIN,  SHRT_MAX,    0, 0,           2 },
-	{ "char",    0,  "char",   false,  true,  false,  0, 0,                   0, USHRT_MAX,   2 },
-	{ "int",     0,  "int",    true,   true,  false,  INT_MIN,   INT_MAX,     0, 0,           4 },
-};
-
-/* What are the appropriate types for ruby? */
-HostType hostTypesRuby[] = 
-{
-	{ "char",    0,  "char",   true,   true,  false,  CHAR_MIN,  CHAR_MAX,    0, 0, 1 },
-	{ "int",     0,  "int",    true,   true,  false,  INT_MIN,   INT_MAX,     0, 0, 4 },
-};
-
-HostType hostTypesCSharp[] =
-{
-	{ "sbyte",   0,  "sbyte",   true,   true,  false,  CHAR_MIN,  CHAR_MAX,    0, 0,           1 },
-	{ "byte",    0,  "byte",    false,  true,  false,  0, 0,                   0, UCHAR_MAX,   1 },
-	{ "short",   0,  "short",   true,   true,  false,  SHRT_MIN,  SHRT_MAX,    0, 0,           2 },
-	{ "ushort",  0,  "ushort",  false,  true,  false,  0, 0,                   0, USHRT_MAX,   2 },
-	{ "char",    0,  "char",    false,  true,  true,   0, 0,                   0, USHRT_MAX,   2 },
-	{ "int",     0,  "int",     true,   true,  false,  INT_MIN,   INT_MAX,     0, 0,           4 },
-	{ "uint",    0,  "uint",    false,  true,  false,  0, 0,                   0, UINT_MAX,    4 },
-	{ "long",    0,  "long",    true,   true,  false,  LONG_MIN,  LONG_MAX,    0, 0,           8 },
-	{ "ulong",   0,  "ulong",   false,  true,  false,  0, 0,                   0, ULONG_MAX,   8 },
-};
-
-HostType hostTypesOCaml[] =
-{
-	{ "int",    0,  "int",      true,   true,  false,  S31BIT_MIN, S31BIT_MAX,  0, 0, 4 },
-};
-
-HostType hostTypesCrack[] = 
-{
-	{ "byte",    0,  "byte",     false,  true,  true,   0, 0,                     0, UCHAR_MAX,    1 },
-	{ "int32",   0,  "int32",    true,   true,  false,  S32BIT_MIN,  S32BIT_MAX,  0, 0,            4 },
-	{ "uint32",  0,  "uint32",   false,  true,  false,  0, 0,                     0, U32BIT_MAX,   4 },
-	{ "int",     0,  "int",      true,   true,  false,  INT_MIN,     INT_MAX,     0, 0,            sizeof(int) },
-	{ "uint",    0,  "uint",     false,  true,  false,  0, 0,                     0, UINT_MAX,     sizeof(int) },  
-};
-
-HostType hostTypesRust[] =
-{
-	{ "u8",    0,  "byte",      true,   true,  false,  0, UCHAR_MAX,  0, 0, 4 },
-};
-
-HostType hostTypesJulia[] =
-{
-	{ "u8",    0,  "byte",      true,   true,  false,  0, UCHAR_MAX,  0, 0, 4 },
-};
-
-HostType hostTypesJS[] =
-{
-	{ "s8",     0, "int8",    true,   true,  false,  CHAR_MIN,  CHAR_MAX,   0, 0,          1 },
-	{ "u8",     0, "uint8",   false,  true,  false,  0, 0,                  0, UCHAR_MAX,  1 },
-	{ "s16",    0, "int16",   true,   true,  false,  SHRT_MIN,  SHRT_MAX,   0, 0,          2 },
-	{ "u16",    0, "uint16",  false,  true,  false,  0, 0,                  0, USHRT_MAX,  2 },
-	{ "i32",    0, "int32",   true,   true,  false,  INT_MIN,   INT_MAX,    0, 0,          4 },
-	{ "u32",    0, "uint32",  false,  true,  false,  0, 0,                  0, UINT_MAX,   4 },
-	{ "number", 0, "number",  true,   true,  false,  LONG_MIN,  LONG_MAX,   0, 0,          8 },
 };
 
 const HostLang hostLangC = {
@@ -152,131 +62,10 @@ const HostLang hostLangAsm = {
 	"no-lang"
 };
 
-const HostLang hostLangD = {
-	"D",
-	"-D",
-	HostLang::D,
-	hostTypesD, 9,
-	hostTypesD+2,
-	true,
-	true,
-	"d"
-};
-
-const HostLang hostLangGo = {
-	"Go",
-	"-Z",
-	HostLang::Go,
-	hostTypesGo, 10,
-	hostTypesGo+0,
-	false,
-	true,
-	"go"
-};
-
-const HostLang hostLangJava = {
-	"Java",
-	"-J",
-	HostLang::Java,
-	hostTypesJava, 4,
-	hostTypesJava+2,
-	false,
-	true,
-	"java"
-};
-
-const HostLang hostLangRuby = {
-	"Ruby",
-	"-R",
-	HostLang::Ruby,
-	hostTypesRuby, 2,
-	hostTypesRuby+0,
-	false,
-	true,
-	"ruby"
-};
-
-const HostLang hostLangCSharp = {
-	"C#",
-	"-A",
-	HostLang::CSharp,
-	hostTypesCSharp, 9,
-	hostTypesCSharp+4,
-	true,
-	true,
-	"csharp"
-};
-
-const HostLang hostLangOCaml = {
-	"OCaml",
-	"-O",
-	HostLang::OCaml,
-	hostTypesOCaml, 1,
-	hostTypesOCaml+0,
-	false,
-	true,
-	"ocaml"
-};
-
-const HostLang hostLangCrack = {
-	"Crack",
-	"-K",
-	HostLang::Crack,
-	hostTypesCrack, 5,
-	hostTypesCrack+0,
-	true,
-	true,
-	"crack"
-};
-
-const HostLang hostLangRust = {
-	"Rust",
-	"-U",
-	HostLang::Rust,
-	hostTypesRust, 1,
-	hostTypesRust+0,
-	false,
-	true,
-	"rust"
-};
-
-const HostLang hostLangJulia = {
-	"Julia",
-	"-Y",
-	HostLang::Julia,
-	hostTypesJulia, 1,
-	hostTypesJulia+0,
-	false,
-	true,
-	"julia"
-};
-
-const HostLang hostLangJS = {
-	"JavaScript",
-	"-P",
-	HostLang::JS,
-	hostTypesJS, 7,
-	hostTypesJS+1,
-	false,
-	true,
-	"js"
-};
-
 const HostLang *hostLangs[] = {
 	&hostLangC,
 	&hostLangAsm,
-	&hostLangD,
-	&hostLangGo,
-	&hostLangJava,
-	&hostLangRuby,
-	&hostLangCSharp,
-	&hostLangOCaml,
-	&hostLangRust,
-	&hostLangCrack,
-	&hostLangJulia,
-	&hostLangJS,
 };
-
 
 const int numHostLangs = sizeof(hostLangs)/sizeof(hostLangs[0]);
 

@@ -1,22 +1,23 @@
 /*
- *  Copyright 2005-2007 Adrian Thurston <thurston@complang.org>
- */
-
-/*  This file is part of Ragel.
+ * Copyright 2005-2007 Adrian Thurston <thurston@colm.net>
  *
- *  Ragel is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- * 
- *  Ragel is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with Ragel; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #include "gendata.h"
@@ -1107,6 +1108,22 @@ void Reducer::resolveTargetStates()
 {
 	for ( GenActionList::Iter a = actionList; a.lte(); a++ )
 		resolveTargetStates( a->inlineList );
+
+#if 0
+		for ( RedStateList::Iter st = redFsm->stateList; st.lte(); st++ ) {
+			if ( st->eofAction != 0 ) {
+				for ( GenActionTable::Iter item = st->eofAction->key; item.lte(); item++ )
+					setLabelsNeeded( item->value->inlineList );
+			}
+
+			if ( st->eofTrans != 0 ) {
+				long condsFullSize = st->eofTrans->condFullSize();
+				for ( int c = 0; c < condsFullSize; c++ ) {
+					RedCondPair *pair = st->eofTrans->outCond( c );
+					setLabelsNeeded( pair );
+				}
+			}
+#endif	
 }
 
 bool Reducer::setAlphType( const HostLang *hostLang, const char *data )
@@ -1257,6 +1274,10 @@ void Reducer::analyzeAction( GenAction *act, GenInlineList *inlineList )
 			{
 				redFsm->bUsingAct = true;
 			}
+
+			/* Any by value control in all actions? */
+			if ( item->type == GenInlineItem::CallExpr || item->type == GenInlineItem::GotoExpr )
+				redFsm->bAnyActionByValControl = true;
 		}
 
 		/* Check for various things in regular actions. */
@@ -1509,11 +1530,32 @@ void CodeGenData::write_option_error( InputLoc &loc, std::string arg )
 	red->id->warning(loc) << "unrecognized write option \"" << arg << "\"" << std::endl;
 }
 
+void CodeGenData::writeClear()
+{
+	clear();
+
+	/* Delete all the nodes in the action list. Will cause all the
+	 * string data that represents the actions to be deallocated. */
+	red->fsm->ctx->actionList.empty();
+
+	delete red->fsm;
+	red->fsm = 0;
+
+	// red->pd->graphDict.empty();
+
+	cleared = true;
+}
+
 void CodeGenData::writeStatement( InputLoc &loc, int nargs,
 		std::vector<std::string> &args, bool generateDot, const HostLang *hostLang )
 {
 	/* Start write generation on a fresh line. */
 	out << '\n';
+
+	if ( cleared ) {
+		red->id->error(loc) << "write statement following a clear is invalid" << std::endl;
+		return;
+	}
 
 	if ( args[0] == "data" ) {
 		for ( int i = 1; i < nargs; i++ ) {
@@ -1572,6 +1614,11 @@ void CodeGenData::writeStatement( InputLoc &loc, int nargs,
 		for ( int i = 1; i < nargs; i++ )
 			write_option_error( loc, args[i] );
 		writeError();
+	}
+	else if ( args[0] == "clear" ) {
+		for ( int i = 1; i < nargs; i++ )
+			write_option_error( loc, args[i] );
+		writeClear();
 	}
 	else {
 		/* EMIT An error here. */

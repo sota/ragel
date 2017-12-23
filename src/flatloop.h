@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2014 Adrian Thurston <thurston@colm.net>
+ * Copyright 2004-2014 Adrian Thurston <thurston@colm.net>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to
@@ -20,57 +20,59 @@
  * SOFTWARE.
  */
 
-#ifndef _GOTOEXP_H
-#define _GOTOEXP_H
+#ifndef _FLATLOOP_H
+#define _FLATLOOP_H
 
 #include <iostream>
-#include "goto.h"
+#include "flat.h"
 
 /* Forwards. */
 struct CodeGenData;
+struct NameInst;
+struct RedTransAp;
+struct RedStateAp;
 
-/*
- * class SwitchExpGoto
- */
-class SwitchExpGoto
-	: public Goto
+class FlatLoopGoto
+	: public Flat
 {
 public:
-	SwitchExpGoto( const CodeGenArgs &args )
-		: Goto(args) {}
-
-	std::ostream &EXEC_ACTIONS();
-	std::ostream &TO_STATE_ACTION_SWITCH();
-	std::ostream &FROM_STATE_ACTION_SWITCH();
-	std::ostream &FINISH_CASES();
-	std::ostream &EOF_ACTION_SWITCH();
-	unsigned int TO_STATE_ACTION( RedStateAp *state );
-	unsigned int FROM_STATE_ACTION( RedStateAp *state );
-	unsigned int EOF_ACTION( RedStateAp *state );
-
-	virtual void NFA_PUSH_ACTION( RedNfaTarg *targ );
-	virtual void NFA_POP_TEST( RedNfaTarg *targ );
-	virtual void NFA_FROM_STATE_ACTION_EXEC();
+	FlatLoopGoto( const CodeGenArgs &args )
+		: Flat(args) {}
 
 	void tableDataPass();
 
 	virtual void genAnalysis();
 	virtual void writeData();
 	virtual void writeExec();
+
+protected:
+	std::ostream &TO_STATE_ACTION_SWITCH();
+	std::ostream &FROM_STATE_ACTION_SWITCH();
+	std::ostream &EOF_ACTION_SWITCH();
+	std::ostream &ACTION_SWITCH();
+
+	virtual void TO_STATE_ACTION( RedStateAp *state );
+	virtual void FROM_STATE_ACTION( RedStateAp *state );
+	virtual void EOF_ACTION( RedStateAp *state );
+	virtual void COND_ACTION( RedCondPair *cond );
+
+	virtual void NFA_PUSH_ACTION( RedNfaTarg *targ );
+	virtual void NFA_POP_TEST( RedNfaTarg *targ );
+
+	virtual void NFA_FROM_STATE_ACTION_EXEC();
 };
 
 namespace C
 {
-	class SwitchExpGoto
+	class FlatLoopGoto
 	:
-		public ::SwitchExpGoto
+		public ::FlatLoopGoto
 	{
 	public:
-		SwitchExpGoto( const CodeGenArgs &args )
-			: ::SwitchExpGoto( args )
+		FlatLoopGoto( const CodeGenArgs &args )
+			: ::FlatLoopGoto( args )
 		{}
 	};
 }
-
 
 #endif

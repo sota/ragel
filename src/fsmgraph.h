@@ -1,22 +1,23 @@
 /*
- *  Copyright 2001-2016 Adrian Thurston <thurston@complang.org>
- */
-
-/*  This file is part of Ragel.
+ * Copyright 2001-2016 Adrian Thurston <thurston@colm.net>
  *
- *  Ragel is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- * 
- *  Ragel is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with Ragel; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #ifndef _FSMGRAPH_H
@@ -642,7 +643,7 @@ struct TransCondAp
 		condList.empty();
 	}
 
-	/* Cond trans list. */
+	/* Cond trans list. Sorted by key value. */
 	CondList condList;
 };
 
@@ -1020,11 +1021,9 @@ struct FsmGbl
 	:
 		printStatistics(false),
 		errorCount(0),
-		inLibRagel(false),
+		//inLibRagel(false),
 		displayPrintables(false),
-		backend(Direct),
 		stringTables(false),
-		backendFeature(GotoFeature),
 		checkPriorInteraction(0),
 		wantDupsRemoved(true),
 		minimizeLevel(MinimizePartition2),
@@ -1033,9 +1032,20 @@ struct FsmGbl
 
 	bool printStatistics;
 
-	/* Error reporting. */
+	/*
+	 * Error reporting.
+	 */
+	
+	/* PROGNAME: txt */
 	std::ostream &error();
+
+	/* file:loc: txt */
 	std::ostream &error( const InputLoc &loc ); 
+
+	/* txt */
+	std::ostream &error_plain();
+
+	/* file:loc: warning: txt */
 	std::ostream &warning( const InputLoc &loc ); 
 
 	/* Stats reporting. */
@@ -1048,13 +1058,11 @@ struct FsmGbl
 	std::stringstream libcout;
 
 	int errorCount;
-	bool inLibRagel;
+	//bool inLibRagel;
 	void abortCompile( int code );
 	bool displayPrintables;
 
-	RagelBackend backend;
 	bool stringTables;
-	BackendFeature backendFeature;
 	bool checkPriorInteraction;
 	bool wantDupsRemoved;
 
@@ -2125,6 +2133,9 @@ public:
 	void expandCondKeys( CondKeySet &condKeys, CondSpace *fromSpace,
 			CondSpace *mergedSpace );
 
+	/* Back to trans ap (minimmization) */
+	TransDataAp *convertToTransAp( StateAp *from, CondAp *cond );
+
 	/* Cross a src transition with one that is already occupying a spot. */
 	TransCondAp *convertToCondAp( StateAp *state, TransDataAp *trans );
 	CondSpace *expandCondSpace( TransAp *destTrans, TransAp *srcTrans );
@@ -2166,6 +2177,10 @@ public:
 	/*
 	 * Transition Comparison.
 	 */
+
+	template< class Trans > int compareCondBitElim( Trans *trans1, Trans *trans2 );
+	template< class Trans > int compareCondBitElimPtr( Trans *trans1, Trans *trans2 );
+	int compareCondListBitElim( const CondList &condList1, const CondList &condList2 );
 
 	/* Compare priority and function table of transitions. */
 	static int compareTransData( TransAp *trans1, TransAp *trans2 );
@@ -2439,6 +2454,8 @@ public:
 	/* Check if a machine defines a single character. This is useful in
 	 * validating ranges and machines to export. */
 	bool checkSingleCharMachine( );
+
+	bool elimCondBits();
 };
 
 /* Callback invoked when another trans (or possibly this) is added into this
@@ -2475,6 +2492,23 @@ template< class Trans > int FsmAp::compareCondDataPtr( Trans *trans1, Trans *tra
 	else if ( trans1 != 0 ) {
 		/* Both of the transition pointers are set. */
 		int compareRes = compareCondData( trans1, trans2 );
+		if ( compareRes != 0 )
+			return compareRes;
+	}
+	return 0;
+}
+
+/* Compares two transition pointers according to priority and functions.
+ * Either pointer may be null. Does not consider to state or from state. */
+template< class Trans > int FsmAp::compareCondBitElimPtr( Trans *trans1, Trans *trans2 )
+{
+	if ( trans1 == 0 && trans2 != 0 )
+		return -1;
+	else if ( trans1 != 0 && trans2 == 0 )
+		return 1;
+	else if ( trans1 != 0 ) {
+		/* Both of the transition pointers are set. */
+		int compareRes = compareCondBitElim( trans1, trans2 );
 		if ( compareRes != 0 )
 			return compareRes;
 	}

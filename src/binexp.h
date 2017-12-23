@@ -20,57 +20,54 @@
  * SOFTWARE.
  */
 
-#ifndef _GOTOEXP_H
-#define _GOTOEXP_H
+#ifndef _BINEXP_H
+#define _BINEXP_H
 
 #include <iostream>
-#include "goto.h"
+#include "binary.h"
 
 /* Forwards. */
 struct CodeGenData;
 
-/*
- * class SwitchExpGoto
- */
-class SwitchExpGoto
-	: public Goto
+class BinaryExpGoto : public Binary
 {
 public:
-	SwitchExpGoto( const CodeGenArgs &args )
-		: Goto(args) {}
+	BinaryExpGoto( const CodeGenArgs &args );
 
-	std::ostream &EXEC_ACTIONS();
-	std::ostream &TO_STATE_ACTION_SWITCH();
-	std::ostream &FROM_STATE_ACTION_SWITCH();
-	std::ostream &FINISH_CASES();
-	std::ostream &EOF_ACTION_SWITCH();
-	unsigned int TO_STATE_ACTION( RedStateAp *state );
-	unsigned int FROM_STATE_ACTION( RedStateAp *state );
-	unsigned int EOF_ACTION( RedStateAp *state );
-
-	virtual void NFA_PUSH_ACTION( RedNfaTarg *targ );
-	virtual void NFA_POP_TEST( RedNfaTarg *targ );
-	virtual void NFA_FROM_STATE_ACTION_EXEC();
-
+	void calcIndexSize();
 	void tableDataPass();
 
 	virtual void genAnalysis();
 	virtual void writeData();
 	virtual void writeExec();
+
+protected:
+	std::ostream &TO_STATE_ACTION_SWITCH();
+	std::ostream &FROM_STATE_ACTION_SWITCH();
+	std::ostream &EOF_ACTION_SWITCH();
+	std::ostream &ACTION_SWITCH();
+
+	virtual void TO_STATE_ACTION( RedStateAp *state );
+	virtual void FROM_STATE_ACTION( RedStateAp *state );
+	virtual void EOF_ACTION( RedStateAp *state );
+	virtual void COND_ACTION( RedCondPair *cond );
+
+	virtual void NFA_PUSH_ACTION( RedNfaTarg *targ );
+	virtual void NFA_POP_TEST( RedNfaTarg *targ );
+	virtual void NFA_FROM_STATE_ACTION_EXEC();
 };
 
 namespace C
 {
-	class SwitchExpGoto
+	class BinaryExpGoto
 	:
-		public ::SwitchExpGoto
+		public ::BinaryExpGoto
 	{
 	public:
-		SwitchExpGoto( const CodeGenArgs &args )
-			: ::SwitchExpGoto( args )
+		BinaryExpGoto( const CodeGenArgs &args )
+			: ::BinaryExpGoto( args )
 		{}
 	};
 }
-
 
 #endif

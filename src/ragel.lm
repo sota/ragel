@@ -1,11 +1,24 @@
 global GblActionParams: bool = false
 global GblSectionPass: bool = false
 
+struct machine
+	Name: str
+	ActionParams: map<str, str>
+end
+
+global GblMachineMap: map<str, machine> = new map<str, machine>()
+global GblCurMachine: machine
+global GblIncludeDepth: int = 0
+global GblTargetMachine: str = ""
+global GblSearchMachine: str = ""
+global GblWantSection: bool = false
+global GblImport: bool = false
+
 bool action_params_find( Machine: str, Action: str )
-= cc_action_params_find
+	= cc_action_params_find
 
 bool action_params_insert( Machine: str, Action: str )
-= cc_action_params_insert
+	= cc_action_params_insert
 
 rl ident
 	/( alpha | '_' ) ( alpha | digit | '_' )*/
@@ -18,20 +31,6 @@ rl hex_number
 
 rl hex_char
 	/ '0x' [0-9a-fA-F]{2}  /
-
-## Optimization for hex chars that appear near to each other. Converts the
-## string of 2-digit hex chars into a single string. The parse tree walker
-## concatenates the chars.
-#rl hex_string /
-#	hex_char
-#	(
-#		(
-#			[\t\n ]+ |
-#			[\t\n ]* '.' [\t\n ]*
-#		)
-#		hex_char
-#	)+
-#/
 
 rl NL / '\n' /
 
@@ -53,43 +52,98 @@ rl d_literal
 rl host_re_literal
 	/ '/' ([^/\\] | NL | '\\' (any | NL))* '/' /
 
-namespace srlex
+#
+# Consuming ragel defintions without parsing. Used for included sections we
+# don't want and import (TODO).
+#
+namespace consume
+	lex 
+		token h_word / [a-zA-Z_][a-zA-Z0-9_]* /
+
+		token h_open /'{'/
+		token h_close /'}'/
+
+		token h_number /digit+/
+		token h_hex_number /'0x' [0-9a-fA-F]+/
+
+		token h_comment
+			/ c_comment | cpp_comment /
+
+		token h_string
+			/ s_literal | d_literal /
+
+		token h_whitespace
+			/ ( [ \t] | NL )+ /
+
+		token h_any / any /
+	end
+
+	def host_tok
+		[h_word]
+	|	[h_number]
+	|	[h_hex_number]
+	|	[h_comment]
+	|	[h_string]
+	|	[h_whitespace]
+	|	[h_open host_tok* h_close]
+	|	[h_any]
+
+	lex
+		ignore /[\t\n ]+/
+		ignore /'#' any* :> '\n'/
+
+		literal `}%%
+
+		token word / [a-zA-Z_][a-zA-Z0-9_]* /
+		token uint / number /
+		token hex / hex_number /
+
+		token string /
+			'"' ( [^"\\] | '\\' any )* '"' 'i'? |
+			"'" ( [^'\\] | '\\' any )* "'" 'i'? |
+			"[" ( [^\]\\] | '\\' any )* "]" 'i'? #|
+			#"/" ( [^\/\\] | '\\' any )* "/" 'i'?
+		/
+
+
+		token open  /'{'/ -ni
+		token close ni- /'}'/
+
+		token c_any / any /
+
+	end
+
+
+	# Garbling up a machine, no interpretation
+	def tok
+		[word]
+	|	[uint]
+	|	[hex]
+	|	[string]
+	|	[open host_tok* h_close]
+	|	[c_any]
+end
+
+# State reference.
+namespace state_ref
 	lex
 		ignore /[\t\n ]+/
 		literal `:: `; `)
 		token word /[a-zA-Z_][a-zA-Z0-9_]*/
 	end
+
+	def state_ref
+		[opt_name_sep state_ref_names] :Ref
+
+	def opt_name_sep
+		[`::] :ColonColon
+	|	[] :Empty
+
+	# List of names separated by ::
+	def state_ref_names
+		[state_ref_names `:: word] :Rec
+	|	[word] :Base
 end
-
-struct machine
-	Name: str
-	ActionParams: map<str, str>
-end
-
-global MachineMap: map<str, machine> = new map<str, machine>()
-global CurMachine: machine
-
-global Lang: str
-
-lex
-	token select /''/
-	{
-		if Lang == "ruby"
-			input->push( make_token( typeid<ruby_select>, '' ) )
-		elsif Lang == "ocaml"
-			input->push( make_token( typeid<ocaml_select>, '' ) )
-		elsif Lang == "crack"
-			input->push( make_token( typeid<crack_select>, '' ) )
-		else
-			input->push( make_token( typeid<c_select>, '' ) )
-	}
-
-	token c_select //
-	token ruby_select //
-	token ocaml_select //
-	token crack_select //
-end
-
 
 namespace ragel
 	lex
@@ -129,8 +183,6 @@ namespace ragel
 			"'" ( [^'\\] | '\\' any )* "'" 'i'?
 		/
 
-		# token hex_string / hex_string /
-
 		token lex_regex_open /'/'/ -ni
 		token lex_sqopen_pos /'['/ -ni
 		token lex_sqopen_neg /'[^'/ -ni
@@ -166,6 +218,48 @@ namespace ragel
 		}
 
 	token variable_name /ident/
+
+	# This region is for deciding if we want to parse a ragel section, or if we
+	# want to consume it without interpreting. Consuming is for included
+	# sections we don't want and all sections in an imported file.
+	lex
+		token ign_select /''/
+		{
+			if GblWantSection
+				input->push( make_token( typeid<ign_want>, '' ) )
+			else
+				input->push( make_token( typeid<ign_ignore>, '' ) )
+		}
+
+		token ign_want //
+		token ign_ignore //
+	end
+
+	#
+	# Machine name word. We inspect it to determine if we are interested in the
+	# section.
+	#
+	lex
+		token mn_word / [a-zA-Z_][a-zA-Z0-9_]* /
+		{
+			S: str = input->pull(match_length)
+			IgnWord: mn_word = make_token( typeid<mn_word>, S )
+			input->push( IgnWord )
+
+			if ( GblImport )
+				GblWantSection = false
+			else if ( GblSearchMachine != "" ) {
+				if ( S != GblSearchMachine )
+					GblWantSection = false
+				else 
+					GblWantSection = true
+			}
+			else {
+				GblWantSection = true
+			}
+		}
+	end
+
 
 	def inline_expr_reparse
 		[_inline_expr_reparse] :Reparse
@@ -222,16 +316,10 @@ namespace ragel
 	|	[word] :Base
 
 	def action_expr
-		[`{ c_select     CInlineExpr: c_inline::inline_expr c_inline::`}] :C
-	|	[`{ ruby_select  RubyInlineExpr: ruby_inline::inline_expr ruby_inline::`}]
-	|	[`{ ocaml_select OCamlInlineExpr: ocaml_inline::inline_expr ocaml_inline::`}]
-	|	[`{ crack_select CrackInlineExpr: crack_inline::inline_expr crack_inline::`}]
+		[`{ CInlineExpr: inline::inline_expr inline::`}] :ActionExpr
 
 	def action_block
-		[`{ c_select     CInlineBlock: c_inline::inline_block c_inline::`}] :C
-	|	[`{ ruby_select  RubyInlineBlock: ruby_inline::inline_block ruby_inline::`}]
-	|	[`{ ocaml_select OCamlInlineBlock: ocaml_inline::inline_block ocaml_inline::`}]
-	|	[`{ crack_select CrackInlineBlock: crack_inline::inline_block crack_inline::`}]
+		[`{ CInlineBlock: inline::inline_block inline::`}] :ActionBlock
 
 	def action_arg_list
 		[action_arg_list `, action_ref] :Rec
@@ -245,14 +333,14 @@ namespace ragel
 		[word] :Plain
 		{
 			if ! GblSectionPass {
-				if action_params_find( CurMachine->Name, $lhs.word )
+				if action_params_find( GblCurMachine->Name, $lhs.word )
 					reject
 			}
 		}
 	|	[word `( opt_action_arg_list `)] :Args
 		{
 			if ! GblSectionPass {
-				if ! action_params_find( CurMachine->Name, $lhs.word )
+				if ! action_params_find( GblCurMachine->Name, $lhs.word )
 					reject
 			}
 		}
@@ -366,7 +454,6 @@ namespace ragel
 		[alphabet_num] :AlphabetNum
 	|	[word] :Word
 	|	[string] :String
-	#|	[hex_string] :HexString
 	|	[lex_sqopen_pos reg_or_data re_or_sqclose] :PosOrBlock
 	|	[lex_sqopen_neg reg_or_data re_or_sqclose] :NegOrBlock
 	|	[lex_regex_open regex re_close] :Regex
@@ -461,7 +548,7 @@ namespace ragel
 				# Track that this action has params so we can parse appropriately
 				# when reducing.
 				# CurMachine->ActionParams->insert( $lhs.word, $lhs.word )
-				action_params_insert( CurMachine->Name, $lhs.word )
+				action_params_insert( GblCurMachine->Name, $lhs.word )
 			}
 
 			# Reset after parsing the block. 
@@ -518,19 +605,23 @@ namespace ragel
 		[word] :Word
 
 	def machine_name
-		[`machine word `;] :MachineName
+		[`machine mn_word `;] :MachineName
 		{
-			Machine: machine = MachineMap->find( $lhs.word )
+			Name: str = $lhs.mn_word
+			if GblTargetMachine != ""
+				Name = GblTargetMachine
+
+			Machine: machine = GblMachineMap->find( Name )
 
 			if !Machine
 			{
 				Machine = new machine()
-				Machine->Name = $lhs.word
+				Machine->Name = Name
 				Machine->ActionParams = new map<str, str>()
-				MachineMap->insert( Machine->Name, Machine )
+				GblMachineMap->insert( Machine->Name, Machine )
 			}
 
-			CurMachine = Machine
+			GblCurMachine = Machine
 		}
 
 	def statement
@@ -550,10 +641,13 @@ namespace ragel
 	|	[`nfaprepush action_block] :NfaPrePush commit
 	|	[`nfapostpop action_block] :NfaPostPop commit
 
+
 	def opt_machine_name
 		[machine_name] :MachineName
 	|	[] :Empty
 
 	def ragel_start
-		[opt_machine_name statement*]
+		[opt_machine_name ign_want statement*]
+	|	[opt_machine_name ign_ignore consume::tok*]
 end
+

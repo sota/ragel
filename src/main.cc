@@ -1,22 +1,23 @@
 /*
- *  Copyright 2001-2015 Adrian Thurston <thurston@complang.org>
- */
-
-/*  This file is part of Ragel.
+ * Copyright 2001-2015 Adrian Thurston <thurston@colm.net>
  *
- *  Ragel is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- * 
- *  Ragel is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with Ragel; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #include <stdlib.h>
@@ -101,16 +102,6 @@ void InputData::usage()
 "   --asm --gas-x86-64-sys-v\n"
 "                        GNU AS, x86_64, System V ABI.\n"
 "                        Generated in a code style equivalent to -G2\n"
-"   -D                   D           All code styles supported\n"
-"   -Z                   Go          All code styles supported\n"
-"   -A                   C#          -T0 -T1 -F0 -F1 -G0 -G1\n"
-"   -J                   Java        -T0 -T1 -F0 -F1\n"
-"   -R                   Ruby        -T0 -T1 -F0 -F1\n"
-"   -O                   OCaml       -T0 -T1 -F0 -F1\n"
-"   -U                   Rust        -T0 -T1 -F0 -F1\n"
-"   -Y                   Julia       -T0 -T1 -F0 -F1\n"
-"   -K                   Crack       -T0 -T1 -F0 -F1\n"
-"   -P                   JavaScript  -T0 -T1 -F0 -F1\n"
 "line directives:\n"
 "   -L                   Inhibit writing of #line directives\n"
 "code style:\n"
@@ -124,7 +115,7 @@ void InputData::usage()
 "large machines:\n"
 "   --integral-tables    Use integers for table data (default)\n"
 "   --string-tables      Encode table data into strings for faster host lang\n"
-"                        compilation\n"
+"                        compilation (C)\n"
 "analysis:\n"
 "   --prior-interaction          Search for condition-based general repetitions\n"
 "                                that will not function properly due to state mod\n"
@@ -213,28 +204,11 @@ void InputData::showStyles()
 {
 	switch ( hostLang->lang ) {
 	case HostLang::C:
-	case HostLang::D:
-	case HostLang::Go:
 		info() << "-T0 -T1 -F0 -F1 -G0 -G1 -G2" << endl;
-		break;
-	case HostLang::CSharp:
-		info() << "-T0 -T1 -F0 -F1 -G0 -G1" << endl;
 		break;
 	case HostLang::Asm:
 		info() << "-G2" << endl;
 		break;
-	case HostLang::Java:
-	case HostLang::Ruby:
-	case HostLang::OCaml:
-	case HostLang::Crack:
-	case HostLang::Rust:
-	case HostLang::Julia:
-		info() << "-T0 -T1 -F0 -F1" << endl;
-		break;
-	case HostLang::JS:
-		info() << "-T0" << endl;
-		break;
-
 	}
 
 	abortCompile( 0 );
@@ -258,7 +232,7 @@ void escapeLineDirectivePath( std::ostream &out, char *path )
 
 void InputData::parseArgs( int argc, const char **argv )
 {
-	ParamCheck pc( "r:o:dnmleabjkS:M:I:CDEJZRAOKUYPvHh?-:sT:F:G:LpV", argc, argv );
+	ParamCheck pc( "r:o:dnmleabjkS:M:I:CEvHh?-:sT:F:G:LpV", argc, argv );
 
 	bool showStylesOpt = false;
 
@@ -375,36 +349,6 @@ void InputData::parseArgs( int argc, const char **argv )
 			case 'C':
 				hostLang = &hostLangC;
 				break;
-			case 'D':
-				hostLang = &hostLangD;
-				break;
-			case 'Z':
-				hostLang = &hostLangGo;
-				break;
-			case 'J':
-				hostLang = &hostLangJava;
-				break;
-			case 'R':
-				hostLang = &hostLangRuby;
-				break;
-			case 'A':
-				hostLang = &hostLangCSharp;
-				break;
-			case 'O':
-				hostLang = &hostLangOCaml;
-				break;
-			case 'K':
-				hostLang = &hostLangCrack;
-				break;
-			case 'U':
-				hostLang = &hostLangRust;
-				break;
-			case 'Y':
-				hostLang = &hostLangJulia;
-				break;
-			case 'P':
-				hostLang = &hostLangJS;
-				break;
 
 			/* Version and help. */
 			case 'v':
@@ -454,10 +398,6 @@ void InputData::parseArgs( int argc, const char **argv )
 							"ragel not built with ragel+kelbt support" << endp;
 				}
 #endif
-				else if ( strcmp( arg, "colm-frontend" ) == 0 ) {
-					frontend = ColmBased;
-					frontendSpecified = true;
-				}
 				else if ( strcmp( arg, "reduce-frontend" ) == 0 ) {
 					frontend = ReduceBased;
 					frontendSpecified = true;
@@ -466,31 +406,6 @@ void InputData::parseArgs( int argc, const char **argv )
 					hostLang = &hostLangAsm;
 				else if ( strcmp( arg, "gnu-asm-x86-64-sys-v" ) == 0 )
 					hostLang = &hostLangAsm;
-				else if ( strcmp( arg, "direct" ) == 0 ) {
-					backend = Direct;
-					backendSpecified = true;
-				}
-				else if ( strcmp( arg, "direct-backend" ) == 0 ) {
-					backend = Direct;
-					backendSpecified = true;
-				}
-				else if ( strcmp( arg, "colm-backend" ) == 0 ) {
-					backend = Translated;
-					backendSpecified = true;
-				}
-				else if ( strcmp( arg, "var-backend" ) == 0 ) {
-					/* Forces variable-based backend, even if the target
-					 * language supports the goto-based backend. May require
-					 * --colm-backend depending on the target language (C for
-					 * example is direct by default). */
-					backendFeature = VarFeature;
-					featureSpecified = true;
-				}
-				else if ( strcmp( arg, "goto-backend" ) == 0 ) {
-					/* Forces goto-based based backend. */
-					backendFeature = GotoFeature;
-					featureSpecified = true;
-				}
 				else if ( strcmp( arg, "string-tables" ) == 0 )
 					stringTables = true;
 				else if ( strcmp( arg, "integral-tables" ) == 0 )
@@ -611,13 +526,6 @@ void InputData::parseArgs( int argc, const char **argv )
 
 bool langSupportsGoto( const HostLang *hostLang )
 {
-	if ( hostLang->lang == HostLang::Ruby ||
-			hostLang->lang == HostLang::OCaml ||
-			hostLang->lang == HostLang::Rust ||
-			hostLang->lang == HostLang::Crack ||
-			hostLang->lang == HostLang::Julia )
-		return false;
-	
 	return true;
 }
 
@@ -688,26 +596,8 @@ void InputData::checkArgs()
 				"\" is the same as the input file" << endp;
 	}
 
-	if ( !frontendSpecified ) {
-		if ( hostLang->lang == HostLang::C || hostLang->lang == HostLang::Asm )
-			frontend = ReduceBased;
-		else
-			frontend = ColmBased;
-	}
-
-	if ( !backendSpecified ) {
-		if ( hostLang->lang == HostLang::C || hostLang->lang == HostLang::Asm )
-			backend = Direct;
-		else
-			backend = Translated;
-	}
-
-	if ( !featureSpecified ) {
-		if ( langSupportsGoto( hostLang ) )
-			backendFeature = GotoFeature;
-		else
-			backendFeature = VarFeature;
-	}
+	if ( !frontendSpecified )
+		frontend = ReduceBased;
 
 	if ( checkBreadth ) {
 		if ( histogramFn != 0 )
@@ -715,40 +605,6 @@ void InputData::checkArgs()
 		else
 			defaultHistogram();
 	}
-}
-
-/*
- * result: analysis output
- * out: contents of stdout
- * err: contents of stderr
- * argc, argv: ragel arguments, input file ignored
- * input: input file contents
- */
-extern "C"
-int libragel( char **result, char **out, char **err, int argc, const char **argv, const char *input )
-{
-	InputData id;
-
-	try {
-		id.inLibRagel = true;
-
-		id.parseArgs( argc, argv );
-		id.checkArgs();
-		id.input = input;
-		id.frontend = ReduceBased;
-		id.process();
-	}
-	catch ( const AbortCompile &ac ) {
-		*result = strdup( "" );
-	}
-
-	if ( result != 0 )
-		*result = strdup( id.comm.c_str() );
-	if ( out != 0 )
-		*out = strdup( id.libcout.str().c_str() );
-	if ( err != 0 )
-		*err = strdup( id.libcerr.str().c_str() );
-	return 0;
 }
 
 char *InputData::readInput( const char *inputFileName )
@@ -787,20 +643,8 @@ int main( int argc, const char **argv )
 		id.parseArgs( argc, argv );
 		id.checkArgs();
 
-		if ( id.forceLibRagel ) {
-			id.inLibRagel = true;
-			id.input = id.readInput( id.inputFileName );
-			if ( id.input != 0 ) {
-				id.frontend = ReduceBased;
-				if ( !id.process() )
-					id.abortCompile( 1 );
-			}
-
-		}
-		else {
-			if ( !id.process() )
-				id.abortCompile( 1 );
-		}
+		if ( !id.process() )
+			id.abortCompile( 1 );
 	}
 	catch ( const AbortCompile &ac ) {
 		code = ac.code;
@@ -818,12 +662,6 @@ int main( int argc, const char **argv )
 		}
 	}
 
-	if ( id.forceLibRagel ) {
-		std::cerr << id.libcerr.str();
-		std::cout << id.libcout.str();
-		std::cerr.flush();
-		std::cout.flush();
-	}
 	return code;
 }
 

@@ -1,22 +1,23 @@
 /*
- *  Copyright 2002 Adrian Thurston <thurston@complang.org>
- */
-
-/*  This file is part of Ragel.
+ * Copyright 2002 Adrian Thurston <thurston@colm.net>
  *
- *  Ragel is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- * 
- *  Ragel is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with Ragel; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #include "fsmgraph.h"
@@ -794,6 +795,108 @@ void FsmAp::compressTransitions()
 			}
 		}
 	}
+}
+
+bool FsmAp::elimCondBits()
+{
+	bool modified = false;
+	for ( StateList::Iter st = stateList; st.lte(); st++ ) {
+		restart:
+		for ( TransList::Iter trans = st->outList; trans.lte(); trans++ ) {
+			if ( !trans->plain() ) {
+				CondSpace *cs = trans->condSpace;
+
+				for ( CondSet::Iter csi = cs->condSet; csi.lte(); csi++ ) {
+					long bit = 1 << csi.pos();
+
+					/* Sort into on and off lists. */
+					CondList on;
+					CondList off;
+					TransCondAp *tcap = trans->tcap();
+					while ( tcap->condList.length() > 0 ) {
+						CondAp *cond = tcap->condList.detachFirst();
+						if ( cond->key.getVal() & bit ) {
+							cond->key = CondKey( cond->key.getVal() & ~bit );
+							on.append( cond );
+						}
+						else {
+							off.append( cond );
+						}
+					}
+
+					bool merge = false;
+					if ( on.length() > 0 && on.length() == off.length() ) {
+						/* test if the same */
+						int cmpRes = compareCondListBitElim( on, off );
+						if ( cmpRes == 0 )
+							merge = true;
+					}
+
+					if ( merge ) {
+						if ( cs->condSet.length() == 1 ) {
+							/* clear out the on-list. */
+							while ( on.length() > 0 ) {
+								CondAp *cond = on.detachFirst();
+								detachTrans( st, cond->toState, cond );
+							}
+
+							/* turn back into a plain transition. */
+							CondAp *cond = off.detachFirst();
+							TransAp *n = convertToTransAp( st, cond );
+							TransAp *before = trans->prev;
+							st->outList.detach( trans );
+							st->outList.addAfter( before, n );
+							modified = true;
+							goto restart;
+						}
+						else 
+						{
+							CondSet newSet = cs->condSet;
+							newSet.Vector<Action*>::remove( csi.pos(), 1 );
+							trans->condSpace = addCondSpace( newSet );
+
+							/* clear out the on-list. */
+							while ( on.length() > 0 ) {
+								CondAp *cond = on.detachFirst();
+								detachTrans( st, cond->toState, cond );
+							}
+						}
+					}
+
+					/* Turn back into a single list. */
+					while ( on.length() > 0 || off.length() > 0 ) {
+						if ( on.length() == 0 ) {
+							while ( off.length() > 0 )
+								tcap->condList.append( off.detachFirst() );
+						}
+						else if ( off.length() == 0 ) {
+							while ( on.length() > 0 ) {
+								CondAp *cond = on.detachFirst();
+								cond->key = CondKey( cond->key.getVal() | bit );
+								tcap->condList.append( cond );
+							}
+						}
+						else {
+							if ( off.head->key.getVal() < ( on.head->key.getVal() | bit ) ) {
+								tcap->condList.append( off.detachFirst() );
+							}
+							else {
+								CondAp *cond = on.detachFirst();
+								cond->key = CondKey( cond->key.getVal() | bit );
+								tcap->condList.append( cond );
+							}
+						}
+					}
+
+					if ( merge ) {
+						modified = true;
+						goto restart;
+					}
+				}
+			}
+		}
+	}
+	return modified;
 }
 
 /* Perform minimization after an operation according 

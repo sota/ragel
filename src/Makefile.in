@@ -91,12 +91,8 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @BUILD_PROGRAM_TRUE@bin_PROGRAMS = ragel$(EXEEXT)
-
-# Libragel includes the ragel parsers. It is the programm wrapped up with a
-# libragel call in place of main.
-@BUILD_PROGRAM_TRUE@am__append_1 = libragel.la
+@WITH_RAGEL_KELBT_TRUE@am__append_1 = rlscan.cc rlparse.cc rlparse.h 
 @WITH_RAGEL_KELBT_TRUE@am__append_2 = rlscan.cc rlparse.cc rlparse.h 
-@WITH_RAGEL_KELBT_TRUE@am__append_3 = rlscan.cc rlparse.cc rlparse.h 
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -144,15 +140,11 @@ am__objects_1 = libfsm_la-idbase.lo libfsm_la-fsmstate.lo \
 	libfsm_la-fsmmin.lo libfsm_la-fsmgraph.lo libfsm_la-fsmap.lo \
 	libfsm_la-fsmcond.lo libfsm_la-fsmnfa.lo libfsm_la-common.lo \
 	libfsm_la-redfsm.lo libfsm_la-gendata.lo libfsm_la-allocgen.lo \
-	libfsm_la-codegen.lo libfsm_la-binary.lo \
-	libfsm_la-bingotoloop.lo libfsm_la-bingotoexp.lo \
-	libfsm_la-binvar.lo libfsm_la-binvarloop.lo \
-	libfsm_la-binvarexp.lo libfsm_la-flat.lo \
-	libfsm_la-flatgotoloop.lo libfsm_la-flatgotoexp.lo \
-	libfsm_la-flatvar.lo libfsm_la-flatvarloop.lo \
-	libfsm_la-flatvarexp.lo libfsm_la-goto.lo \
-	libfsm_la-gotoloop.lo libfsm_la-gotoexp.lo libfsm_la-ipgoto.lo \
-	libfsm_la-dot.lo libfsm_la-asm.lo
+	libfsm_la-codegen.lo libfsm_la-binary.lo libfsm_la-binloop.lo \
+	libfsm_la-binexp.lo libfsm_la-flat.lo libfsm_la-flatloop.lo \
+	libfsm_la-flatexp.lo libfsm_la-goto.lo libfsm_la-gotoloop.lo \
+	libfsm_la-gotoexp.lo libfsm_la-ipgoto.lo libfsm_la-dot.lo \
+	libfsm_la-asm.lo
 am_libfsm_la_OBJECTS = $(am__objects_1)
 nodist_libfsm_la_OBJECTS =
 libfsm_la_OBJECTS = $(am_libfsm_la_OBJECTS) \
@@ -161,61 +153,28 @@ AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
 am__v_lt_1 = 
-libragel_la_LIBADD =
-am__objects_2 = libragel_la-idbase.lo libragel_la-fsmstate.lo \
-	libragel_la-fsmbase.lo libragel_la-fsmattach.lo \
-	libragel_la-fsmmin.lo libragel_la-fsmgraph.lo \
-	libragel_la-fsmap.lo libragel_la-fsmcond.lo \
-	libragel_la-fsmnfa.lo libragel_la-common.lo \
-	libragel_la-redfsm.lo libragel_la-gendata.lo \
-	libragel_la-allocgen.lo libragel_la-codegen.lo \
-	libragel_la-binary.lo libragel_la-bingotoloop.lo \
-	libragel_la-bingotoexp.lo libragel_la-binvar.lo \
-	libragel_la-binvarloop.lo libragel_la-binvarexp.lo \
-	libragel_la-flat.lo libragel_la-flatgotoloop.lo \
-	libragel_la-flatgotoexp.lo libragel_la-flatvar.lo \
-	libragel_la-flatvarloop.lo libragel_la-flatvarexp.lo \
-	libragel_la-goto.lo libragel_la-gotoloop.lo \
-	libragel_la-gotoexp.lo libragel_la-ipgoto.lo \
-	libragel_la-dot.lo libragel_la-asm.lo
-am__objects_3 = libragel_la-parsetree.lo libragel_la-parsedata.lo \
-	libragel_la-inputdata.lo libragel_la-load.lo \
-	libragel_la-reducer.lo libragel_la-actparams.lo \
-	libragel_la-main.lo $(am__objects_2)
-am_libragel_la_OBJECTS = $(am__objects_3)
-@WITH_RAGEL_KELBT_TRUE@am__objects_4 = libragel_la-rlscan.lo \
-@WITH_RAGEL_KELBT_TRUE@	libragel_la-rlparse.lo
-am__objects_5 = $(am__objects_4) libragel_la-parse.lo \
-	libragel_la-if.lo libragel_la-commit.lo libragel_la-rlhc.lo
-nodist_libragel_la_OBJECTS = $(am__objects_5)
-libragel_la_OBJECTS = $(am_libragel_la_OBJECTS) \
-	$(nodist_libragel_la_OBJECTS)
-@BUILD_PROGRAM_TRUE@am_libragel_la_rpath = -rpath $(libdir)
 PROGRAMS = $(bin_PROGRAMS)
-am__objects_6 = ragel-idbase.$(OBJEXT) ragel-fsmstate.$(OBJEXT) \
+am__objects_2 = ragel-idbase.$(OBJEXT) ragel-fsmstate.$(OBJEXT) \
 	ragel-fsmbase.$(OBJEXT) ragel-fsmattach.$(OBJEXT) \
 	ragel-fsmmin.$(OBJEXT) ragel-fsmgraph.$(OBJEXT) \
 	ragel-fsmap.$(OBJEXT) ragel-fsmcond.$(OBJEXT) \
 	ragel-fsmnfa.$(OBJEXT) ragel-common.$(OBJEXT) \
 	ragel-redfsm.$(OBJEXT) ragel-gendata.$(OBJEXT) \
 	ragel-allocgen.$(OBJEXT) ragel-codegen.$(OBJEXT) \
-	ragel-binary.$(OBJEXT) ragel-bingotoloop.$(OBJEXT) \
-	ragel-bingotoexp.$(OBJEXT) ragel-binvar.$(OBJEXT) \
-	ragel-binvarloop.$(OBJEXT) ragel-binvarexp.$(OBJEXT) \
-	ragel-flat.$(OBJEXT) ragel-flatgotoloop.$(OBJEXT) \
-	ragel-flatgotoexp.$(OBJEXT) ragel-flatvar.$(OBJEXT) \
-	ragel-flatvarloop.$(OBJEXT) ragel-flatvarexp.$(OBJEXT) \
+	ragel-binary.$(OBJEXT) ragel-binloop.$(OBJEXT) \
+	ragel-binexp.$(OBJEXT) ragel-flat.$(OBJEXT) \
+	ragel-flatloop.$(OBJEXT) ragel-flatexp.$(OBJEXT) \
 	ragel-goto.$(OBJEXT) ragel-gotoloop.$(OBJEXT) \
 	ragel-gotoexp.$(OBJEXT) ragel-ipgoto.$(OBJEXT) \
 	ragel-dot.$(OBJEXT) ragel-asm.$(OBJEXT)
 am_ragel_OBJECTS = ragel-parsetree.$(OBJEXT) ragel-parsedata.$(OBJEXT) \
 	ragel-inputdata.$(OBJEXT) ragel-load.$(OBJEXT) \
 	ragel-reducer.$(OBJEXT) ragel-actparams.$(OBJEXT) \
-	ragel-main.$(OBJEXT) $(am__objects_6)
-@WITH_RAGEL_KELBT_TRUE@am__objects_7 = ragel-rlscan.$(OBJEXT) \
+	ragel-main.$(OBJEXT) $(am__objects_2)
+@WITH_RAGEL_KELBT_TRUE@am__objects_3 = ragel-rlscan.$(OBJEXT) \
 @WITH_RAGEL_KELBT_TRUE@	ragel-rlparse.$(OBJEXT)
-nodist_ragel_OBJECTS = $(am__objects_7) ragel-parse.$(OBJEXT) \
-	ragel-if.$(OBJEXT) ragel-commit.$(OBJEXT) ragel-rlhc.$(OBJEXT)
+nodist_ragel_OBJECTS = $(am__objects_3) ragel-parse.$(OBJEXT) \
+	ragel-commit.$(OBJEXT)
 ragel_OBJECTS = $(am_ragel_OBJECTS) $(nodist_ragel_OBJECTS)
 am__DEPENDENCIES_1 =
 AM_V_P = $(am__v_P_@AM_V@)
@@ -271,10 +230,8 @@ am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
 SOURCES = $(libfsm_la_SOURCES) $(nodist_libfsm_la_SOURCES) \
-	$(libragel_la_SOURCES) $(nodist_libragel_la_SOURCES) \
 	$(ragel_SOURCES) $(nodist_ragel_SOURCES)
-DIST_SOURCES = $(libfsm_la_SOURCES) $(libragel_la_SOURCES) \
-	$(ragel_SOURCES)
+DIST_SOURCES = $(libfsm_la_SOURCES) $(ragel_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -438,23 +395,23 @@ top_srcdir = @top_srcdir@
 # Libfsm contains only the FSM construction code and the backend code
 # generators. It is useful for building code generators in programs not
 # connected to the ragel language.
-lib_LTLIBRARIES = libfsm.la $(am__append_1)
+lib_LTLIBRARIES = libfsm.la
 include_HEADERS = \
-	libragel.h action.h fsmgraph.h ragel.h common.h \
+	action.h fsmgraph.h ragel.h common.h \
 	gendata.h redfsm.h dot.h
 
 nodist_include_HEADERS = config.h
 ragel_CPPFLAGS = -I$(top_srcdir)/aapl -DBINDIR='"@bindir@"'
 LIBFSM_SRC = \
-	buffer.h codegen.h binary.h bingoto.h bingotoloop.h bingotoexp.h binvar.h \
-	binvarloop.h binvarexp.h flat.h flatgotoloop.h flatgotoexp.h flatvar.h \
-	flatvarloop.h flatvarexp.h goto.h gotoloop.h gotoexp.h \
+	buffer.h codegen.h binary.h binloop.h binexp.h \
+	flat.h flatloop.h flatexp.h \
+	goto.h gotoloop.h gotoexp.h \
 	ipgoto.h asm.h \
 	idbase.cc fsmstate.cc fsmbase.cc fsmattach.cc fsmmin.cc fsmgraph.cc \
 	fsmap.cc fsmcond.cc fsmnfa.cc common.cc redfsm.cc gendata.cc \
-	allocgen.cc codegen.cc binary.cc bingotoloop.cc bingotoexp.cc binvar.cc \
-	binvarloop.cc binvarexp.cc flat.cc flatgotoloop.cc flatgotoexp.cc \
-	flatvar.cc flatvarloop.cc flatvarexp.cc goto.cc gotoloop.cc \
+	allocgen.cc codegen.cc binary.cc binloop.cc binexp.cc \
+	flat.cc flatloop.cc flatexp.cc \
+	goto.cc gotoloop.cc \
 	gotoexp.cc ipgoto.cc dot.cc asm.cc
 
 ragel_SOURCES = \
@@ -462,55 +419,27 @@ ragel_SOURCES = \
 	parsetree.cc parsedata.cc inputdata.cc load.cc reducer.cc actparams.cc main.cc \
 	$(LIBFSM_SRC)
 
-nodist_ragel_SOURCES = version.h $(am__append_2) parse.c if.h if.cc \
-	commit.cc rlhc.c
+nodist_ragel_SOURCES = version.h $(am__append_1) parse.c commit.cc
 BUILT_SOURCES = version.h
 ragel_LDADD = $(COLM_LD)
 ragel_DEPENDENCIES = $(COLM_LIBDEP)
-nodist_libragel_la_SOURCES = $(nodist_ragel_SOURCES)
-libragel_la_SOURCES = $(ragel_SOURCES)
-libragel_la_CPPFLAGS = -Dmain=main_lib -I$(top_srcdir)/aapl -DBINDIR='"@bindir@"'
 nodist_libfsm_la_SOURCES = version.h
 libfsm_la_SOURCES = $(LIBFSM_SRC)
 libfsm_la_CPPFLAGS = -I$(top_srcdir)/aapl
 EXTRA_DIST = \
 	ragel.lm \
-	rlhc.lm \
-	rlhc-host.lm \
-	rlhc-c.lm \
-	rlhc-d.lm \
-	rlhc-csharp.lm \
-	rlhc-go.lm \
-	rlhc-ruby.lm \
-	rlhc-java.lm \
-	rlhc-rust.lm \
-	rlhc-ocaml.lm \
-	rlhc-crack.lm \
-	rlhc-julia.lm \
-	rlhc-js.lm \
-	ragel-c.lm \
-	ragel-crack.lm \
-	ragel-ruby.lm \
-	ragel-ocaml.lm \
+	host.lm \
 	rlparse.lm \
 	reducer.lm \
 	rlscan.rl \
 	rlparse.kh \
 	rlparse.kl
 
-CLEANFILES = parse.c if.h if.cc commit.cc rlhc.c $(am__append_3)
+CLEANFILES = parse.c commit.cc rlhc.c $(am__append_2)
 RAGEL_LM = \
 	ragel.lm \
-	ragel-c.lm \
-	ragel-ruby.lm \
-	ragel-ocaml.lm \
-	ragel-crack.lm
+	host.lm
 
-
-# Use a var for the LO extension otherwise automake will think that we are
-# specifying the build rules for the files. This doesn't appear to be a problem
-# for o files.
-LOEXT = lo
 RLHC = \
 	rlhc-host.lm \
 	rlhc-c.lm \
@@ -612,9 +541,6 @@ clean-libLTLIBRARIES:
 
 libfsm.la: $(libfsm_la_OBJECTS) $(libfsm_la_DEPENDENCIES) $(EXTRA_libfsm_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(CXXLINK) -rpath $(libdir) $(libfsm_la_OBJECTS) $(libfsm_la_LIBADD) $(LIBS)
-
-libragel.la: $(libragel_la_OBJECTS) $(libragel_la_DEPENDENCIES) $(EXTRA_libragel_la_DEPENDENCIES) 
-	$(AM_V_CXXLD)$(CXXLINK) $(am_libragel_la_rpath) $(libragel_la_OBJECTS) $(libragel_la_LIBADD) $(LIBS)
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
@@ -678,20 +604,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-allocgen.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-asm.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-binary.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-bingotoexp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-bingotoloop.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-binvar.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-binvarexp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-binvarloop.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-binexp.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-binloop.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-codegen.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-common.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-dot.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-flat.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-flatgotoexp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-flatgotoloop.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-flatvar.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-flatvarexp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-flatvarloop.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-flatexp.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-flatloop.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-fsmap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-fsmattach.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-fsmbase.Plo@am__quote@
@@ -707,70 +627,19 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-idbase.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-ipgoto.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libfsm_la-redfsm.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-actparams.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-allocgen.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-asm.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-binary.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-bingotoexp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-bingotoloop.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-binvar.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-binvarexp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-binvarloop.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-codegen.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-commit.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-common.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-dot.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-flat.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-flatgotoexp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-flatgotoloop.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-flatvar.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-flatvarexp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-flatvarloop.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-fsmap.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-fsmattach.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-fsmbase.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-fsmcond.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-fsmgraph.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-fsmmin.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-fsmnfa.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-fsmstate.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-gendata.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-goto.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-gotoexp.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-gotoloop.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-idbase.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-if.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-inputdata.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-ipgoto.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-load.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-main.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-parse.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-parsedata.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-parsetree.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-redfsm.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-reducer.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-rlhc.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-rlparse.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libragel_la-rlscan.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-actparams.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-allocgen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-asm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-binary.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-bingotoexp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-bingotoloop.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-binvar.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-binvarexp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-binvarloop.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-binexp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-binloop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-codegen.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-commit.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-common.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-dot.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-flat.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-flatgotoexp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-flatgotoloop.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-flatvar.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-flatvarexp.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-flatvarloop.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-flatexp.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-flatloop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-fsmap.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-fsmattach.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-fsmbase.Po@am__quote@
@@ -784,7 +653,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-gotoexp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-gotoloop.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-idbase.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-if.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-inputdata.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-ipgoto.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-load.Po@am__quote@
@@ -794,7 +662,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-parsetree.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-redfsm.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-reducer.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-rlhc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-rlparse.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ragel-rlscan.Po@am__quote@
 
@@ -819,20 +686,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LTCOMPILE) -c -o $@ $<
 
-libragel_la-parse.lo: parse.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libragel_la-parse.lo -MD -MP -MF $(DEPDIR)/libragel_la-parse.Tpo -c -o libragel_la-parse.lo `test -f 'parse.c' || echo '$(srcdir)/'`parse.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-parse.Tpo $(DEPDIR)/libragel_la-parse.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='parse.c' object='libragel_la-parse.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libragel_la-parse.lo `test -f 'parse.c' || echo '$(srcdir)/'`parse.c
-
-libragel_la-rlhc.lo: rlhc.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libragel_la-rlhc.lo -MD -MP -MF $(DEPDIR)/libragel_la-rlhc.Tpo -c -o libragel_la-rlhc.lo `test -f 'rlhc.c' || echo '$(srcdir)/'`rlhc.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-rlhc.Tpo $(DEPDIR)/libragel_la-rlhc.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rlhc.c' object='libragel_la-rlhc.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libragel_la-rlhc.lo `test -f 'rlhc.c' || echo '$(srcdir)/'`rlhc.c
-
 ragel-parse.o: parse.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ragel-parse.o -MD -MP -MF $(DEPDIR)/ragel-parse.Tpo -c -o ragel-parse.o `test -f 'parse.c' || echo '$(srcdir)/'`parse.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-parse.Tpo $(DEPDIR)/ragel-parse.Po
@@ -846,20 +699,6 @@ ragel-parse.obj: parse.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='parse.c' object='ragel-parse.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ragel-parse.obj `if test -f 'parse.c'; then $(CYGPATH_W) 'parse.c'; else $(CYGPATH_W) '$(srcdir)/parse.c'; fi`
-
-ragel-rlhc.o: rlhc.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ragel-rlhc.o -MD -MP -MF $(DEPDIR)/ragel-rlhc.Tpo -c -o ragel-rlhc.o `test -f 'rlhc.c' || echo '$(srcdir)/'`rlhc.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-rlhc.Tpo $(DEPDIR)/ragel-rlhc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rlhc.c' object='ragel-rlhc.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ragel-rlhc.o `test -f 'rlhc.c' || echo '$(srcdir)/'`rlhc.c
-
-ragel-rlhc.obj: rlhc.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT ragel-rlhc.obj -MD -MP -MF $(DEPDIR)/ragel-rlhc.Tpo -c -o ragel-rlhc.obj `if test -f 'rlhc.c'; then $(CYGPATH_W) 'rlhc.c'; else $(CYGPATH_W) '$(srcdir)/rlhc.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-rlhc.Tpo $(DEPDIR)/ragel-rlhc.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='rlhc.c' object='ragel-rlhc.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o ragel-rlhc.obj `if test -f 'rlhc.c'; then $(CYGPATH_W) 'rlhc.c'; else $(CYGPATH_W) '$(srcdir)/rlhc.c'; fi`
 
 .cc.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -987,40 +826,19 @@ libfsm_la-binary.lo: binary.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-binary.lo `test -f 'binary.cc' || echo '$(srcdir)/'`binary.cc
 
-libfsm_la-bingotoloop.lo: bingotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-bingotoloop.lo -MD -MP -MF $(DEPDIR)/libfsm_la-bingotoloop.Tpo -c -o libfsm_la-bingotoloop.lo `test -f 'bingotoloop.cc' || echo '$(srcdir)/'`bingotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-bingotoloop.Tpo $(DEPDIR)/libfsm_la-bingotoloop.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bingotoloop.cc' object='libfsm_la-bingotoloop.lo' libtool=yes @AMDEPBACKSLASH@
+libfsm_la-binloop.lo: binloop.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-binloop.lo -MD -MP -MF $(DEPDIR)/libfsm_la-binloop.Tpo -c -o libfsm_la-binloop.lo `test -f 'binloop.cc' || echo '$(srcdir)/'`binloop.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-binloop.Tpo $(DEPDIR)/libfsm_la-binloop.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binloop.cc' object='libfsm_la-binloop.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-bingotoloop.lo `test -f 'bingotoloop.cc' || echo '$(srcdir)/'`bingotoloop.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-binloop.lo `test -f 'binloop.cc' || echo '$(srcdir)/'`binloop.cc
 
-libfsm_la-bingotoexp.lo: bingotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-bingotoexp.lo -MD -MP -MF $(DEPDIR)/libfsm_la-bingotoexp.Tpo -c -o libfsm_la-bingotoexp.lo `test -f 'bingotoexp.cc' || echo '$(srcdir)/'`bingotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-bingotoexp.Tpo $(DEPDIR)/libfsm_la-bingotoexp.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bingotoexp.cc' object='libfsm_la-bingotoexp.lo' libtool=yes @AMDEPBACKSLASH@
+libfsm_la-binexp.lo: binexp.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-binexp.lo -MD -MP -MF $(DEPDIR)/libfsm_la-binexp.Tpo -c -o libfsm_la-binexp.lo `test -f 'binexp.cc' || echo '$(srcdir)/'`binexp.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-binexp.Tpo $(DEPDIR)/libfsm_la-binexp.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binexp.cc' object='libfsm_la-binexp.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-bingotoexp.lo `test -f 'bingotoexp.cc' || echo '$(srcdir)/'`bingotoexp.cc
-
-libfsm_la-binvar.lo: binvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-binvar.lo -MD -MP -MF $(DEPDIR)/libfsm_la-binvar.Tpo -c -o libfsm_la-binvar.lo `test -f 'binvar.cc' || echo '$(srcdir)/'`binvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-binvar.Tpo $(DEPDIR)/libfsm_la-binvar.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binvar.cc' object='libfsm_la-binvar.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-binvar.lo `test -f 'binvar.cc' || echo '$(srcdir)/'`binvar.cc
-
-libfsm_la-binvarloop.lo: binvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-binvarloop.lo -MD -MP -MF $(DEPDIR)/libfsm_la-binvarloop.Tpo -c -o libfsm_la-binvarloop.lo `test -f 'binvarloop.cc' || echo '$(srcdir)/'`binvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-binvarloop.Tpo $(DEPDIR)/libfsm_la-binvarloop.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binvarloop.cc' object='libfsm_la-binvarloop.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-binvarloop.lo `test -f 'binvarloop.cc' || echo '$(srcdir)/'`binvarloop.cc
-
-libfsm_la-binvarexp.lo: binvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-binvarexp.lo -MD -MP -MF $(DEPDIR)/libfsm_la-binvarexp.Tpo -c -o libfsm_la-binvarexp.lo `test -f 'binvarexp.cc' || echo '$(srcdir)/'`binvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-binvarexp.Tpo $(DEPDIR)/libfsm_la-binvarexp.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binvarexp.cc' object='libfsm_la-binvarexp.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-binvarexp.lo `test -f 'binvarexp.cc' || echo '$(srcdir)/'`binvarexp.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-binexp.lo `test -f 'binexp.cc' || echo '$(srcdir)/'`binexp.cc
 
 libfsm_la-flat.lo: flat.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-flat.lo -MD -MP -MF $(DEPDIR)/libfsm_la-flat.Tpo -c -o libfsm_la-flat.lo `test -f 'flat.cc' || echo '$(srcdir)/'`flat.cc
@@ -1029,40 +847,19 @@ libfsm_la-flat.lo: flat.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-flat.lo `test -f 'flat.cc' || echo '$(srcdir)/'`flat.cc
 
-libfsm_la-flatgotoloop.lo: flatgotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-flatgotoloop.lo -MD -MP -MF $(DEPDIR)/libfsm_la-flatgotoloop.Tpo -c -o libfsm_la-flatgotoloop.lo `test -f 'flatgotoloop.cc' || echo '$(srcdir)/'`flatgotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-flatgotoloop.Tpo $(DEPDIR)/libfsm_la-flatgotoloop.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatgotoloop.cc' object='libfsm_la-flatgotoloop.lo' libtool=yes @AMDEPBACKSLASH@
+libfsm_la-flatloop.lo: flatloop.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-flatloop.lo -MD -MP -MF $(DEPDIR)/libfsm_la-flatloop.Tpo -c -o libfsm_la-flatloop.lo `test -f 'flatloop.cc' || echo '$(srcdir)/'`flatloop.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-flatloop.Tpo $(DEPDIR)/libfsm_la-flatloop.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatloop.cc' object='libfsm_la-flatloop.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-flatgotoloop.lo `test -f 'flatgotoloop.cc' || echo '$(srcdir)/'`flatgotoloop.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-flatloop.lo `test -f 'flatloop.cc' || echo '$(srcdir)/'`flatloop.cc
 
-libfsm_la-flatgotoexp.lo: flatgotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-flatgotoexp.lo -MD -MP -MF $(DEPDIR)/libfsm_la-flatgotoexp.Tpo -c -o libfsm_la-flatgotoexp.lo `test -f 'flatgotoexp.cc' || echo '$(srcdir)/'`flatgotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-flatgotoexp.Tpo $(DEPDIR)/libfsm_la-flatgotoexp.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatgotoexp.cc' object='libfsm_la-flatgotoexp.lo' libtool=yes @AMDEPBACKSLASH@
+libfsm_la-flatexp.lo: flatexp.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-flatexp.lo -MD -MP -MF $(DEPDIR)/libfsm_la-flatexp.Tpo -c -o libfsm_la-flatexp.lo `test -f 'flatexp.cc' || echo '$(srcdir)/'`flatexp.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-flatexp.Tpo $(DEPDIR)/libfsm_la-flatexp.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatexp.cc' object='libfsm_la-flatexp.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-flatgotoexp.lo `test -f 'flatgotoexp.cc' || echo '$(srcdir)/'`flatgotoexp.cc
-
-libfsm_la-flatvar.lo: flatvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-flatvar.lo -MD -MP -MF $(DEPDIR)/libfsm_la-flatvar.Tpo -c -o libfsm_la-flatvar.lo `test -f 'flatvar.cc' || echo '$(srcdir)/'`flatvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-flatvar.Tpo $(DEPDIR)/libfsm_la-flatvar.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatvar.cc' object='libfsm_la-flatvar.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-flatvar.lo `test -f 'flatvar.cc' || echo '$(srcdir)/'`flatvar.cc
-
-libfsm_la-flatvarloop.lo: flatvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-flatvarloop.lo -MD -MP -MF $(DEPDIR)/libfsm_la-flatvarloop.Tpo -c -o libfsm_la-flatvarloop.lo `test -f 'flatvarloop.cc' || echo '$(srcdir)/'`flatvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-flatvarloop.Tpo $(DEPDIR)/libfsm_la-flatvarloop.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatvarloop.cc' object='libfsm_la-flatvarloop.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-flatvarloop.lo `test -f 'flatvarloop.cc' || echo '$(srcdir)/'`flatvarloop.cc
-
-libfsm_la-flatvarexp.lo: flatvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-flatvarexp.lo -MD -MP -MF $(DEPDIR)/libfsm_la-flatvarexp.Tpo -c -o libfsm_la-flatvarexp.lo `test -f 'flatvarexp.cc' || echo '$(srcdir)/'`flatvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libfsm_la-flatvarexp.Tpo $(DEPDIR)/libfsm_la-flatvarexp.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatvarexp.cc' object='libfsm_la-flatvarexp.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-flatvarexp.lo `test -f 'flatvarexp.cc' || echo '$(srcdir)/'`flatvarexp.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-flatexp.lo `test -f 'flatexp.cc' || echo '$(srcdir)/'`flatexp.cc
 
 libfsm_la-goto.lo: goto.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libfsm_la-goto.lo -MD -MP -MF $(DEPDIR)/libfsm_la-goto.Tpo -c -o libfsm_la-goto.lo `test -f 'goto.cc' || echo '$(srcdir)/'`goto.cc
@@ -1105,307 +902,6 @@ libfsm_la-asm.lo: asm.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='asm.cc' object='libfsm_la-asm.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libfsm_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libfsm_la-asm.lo `test -f 'asm.cc' || echo '$(srcdir)/'`asm.cc
-
-libragel_la-parsetree.lo: parsetree.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-parsetree.lo -MD -MP -MF $(DEPDIR)/libragel_la-parsetree.Tpo -c -o libragel_la-parsetree.lo `test -f 'parsetree.cc' || echo '$(srcdir)/'`parsetree.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-parsetree.Tpo $(DEPDIR)/libragel_la-parsetree.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='parsetree.cc' object='libragel_la-parsetree.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-parsetree.lo `test -f 'parsetree.cc' || echo '$(srcdir)/'`parsetree.cc
-
-libragel_la-parsedata.lo: parsedata.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-parsedata.lo -MD -MP -MF $(DEPDIR)/libragel_la-parsedata.Tpo -c -o libragel_la-parsedata.lo `test -f 'parsedata.cc' || echo '$(srcdir)/'`parsedata.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-parsedata.Tpo $(DEPDIR)/libragel_la-parsedata.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='parsedata.cc' object='libragel_la-parsedata.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-parsedata.lo `test -f 'parsedata.cc' || echo '$(srcdir)/'`parsedata.cc
-
-libragel_la-inputdata.lo: inputdata.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-inputdata.lo -MD -MP -MF $(DEPDIR)/libragel_la-inputdata.Tpo -c -o libragel_la-inputdata.lo `test -f 'inputdata.cc' || echo '$(srcdir)/'`inputdata.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-inputdata.Tpo $(DEPDIR)/libragel_la-inputdata.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='inputdata.cc' object='libragel_la-inputdata.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-inputdata.lo `test -f 'inputdata.cc' || echo '$(srcdir)/'`inputdata.cc
-
-libragel_la-load.lo: load.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-load.lo -MD -MP -MF $(DEPDIR)/libragel_la-load.Tpo -c -o libragel_la-load.lo `test -f 'load.cc' || echo '$(srcdir)/'`load.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-load.Tpo $(DEPDIR)/libragel_la-load.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='load.cc' object='libragel_la-load.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-load.lo `test -f 'load.cc' || echo '$(srcdir)/'`load.cc
-
-libragel_la-reducer.lo: reducer.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-reducer.lo -MD -MP -MF $(DEPDIR)/libragel_la-reducer.Tpo -c -o libragel_la-reducer.lo `test -f 'reducer.cc' || echo '$(srcdir)/'`reducer.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-reducer.Tpo $(DEPDIR)/libragel_la-reducer.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='reducer.cc' object='libragel_la-reducer.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-reducer.lo `test -f 'reducer.cc' || echo '$(srcdir)/'`reducer.cc
-
-libragel_la-actparams.lo: actparams.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-actparams.lo -MD -MP -MF $(DEPDIR)/libragel_la-actparams.Tpo -c -o libragel_la-actparams.lo `test -f 'actparams.cc' || echo '$(srcdir)/'`actparams.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-actparams.Tpo $(DEPDIR)/libragel_la-actparams.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='actparams.cc' object='libragel_la-actparams.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-actparams.lo `test -f 'actparams.cc' || echo '$(srcdir)/'`actparams.cc
-
-libragel_la-main.lo: main.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-main.lo -MD -MP -MF $(DEPDIR)/libragel_la-main.Tpo -c -o libragel_la-main.lo `test -f 'main.cc' || echo '$(srcdir)/'`main.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-main.Tpo $(DEPDIR)/libragel_la-main.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='main.cc' object='libragel_la-main.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-main.lo `test -f 'main.cc' || echo '$(srcdir)/'`main.cc
-
-libragel_la-idbase.lo: idbase.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-idbase.lo -MD -MP -MF $(DEPDIR)/libragel_la-idbase.Tpo -c -o libragel_la-idbase.lo `test -f 'idbase.cc' || echo '$(srcdir)/'`idbase.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-idbase.Tpo $(DEPDIR)/libragel_la-idbase.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='idbase.cc' object='libragel_la-idbase.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-idbase.lo `test -f 'idbase.cc' || echo '$(srcdir)/'`idbase.cc
-
-libragel_la-fsmstate.lo: fsmstate.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-fsmstate.lo -MD -MP -MF $(DEPDIR)/libragel_la-fsmstate.Tpo -c -o libragel_la-fsmstate.lo `test -f 'fsmstate.cc' || echo '$(srcdir)/'`fsmstate.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-fsmstate.Tpo $(DEPDIR)/libragel_la-fsmstate.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='fsmstate.cc' object='libragel_la-fsmstate.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-fsmstate.lo `test -f 'fsmstate.cc' || echo '$(srcdir)/'`fsmstate.cc
-
-libragel_la-fsmbase.lo: fsmbase.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-fsmbase.lo -MD -MP -MF $(DEPDIR)/libragel_la-fsmbase.Tpo -c -o libragel_la-fsmbase.lo `test -f 'fsmbase.cc' || echo '$(srcdir)/'`fsmbase.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-fsmbase.Tpo $(DEPDIR)/libragel_la-fsmbase.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='fsmbase.cc' object='libragel_la-fsmbase.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-fsmbase.lo `test -f 'fsmbase.cc' || echo '$(srcdir)/'`fsmbase.cc
-
-libragel_la-fsmattach.lo: fsmattach.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-fsmattach.lo -MD -MP -MF $(DEPDIR)/libragel_la-fsmattach.Tpo -c -o libragel_la-fsmattach.lo `test -f 'fsmattach.cc' || echo '$(srcdir)/'`fsmattach.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-fsmattach.Tpo $(DEPDIR)/libragel_la-fsmattach.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='fsmattach.cc' object='libragel_la-fsmattach.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-fsmattach.lo `test -f 'fsmattach.cc' || echo '$(srcdir)/'`fsmattach.cc
-
-libragel_la-fsmmin.lo: fsmmin.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-fsmmin.lo -MD -MP -MF $(DEPDIR)/libragel_la-fsmmin.Tpo -c -o libragel_la-fsmmin.lo `test -f 'fsmmin.cc' || echo '$(srcdir)/'`fsmmin.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-fsmmin.Tpo $(DEPDIR)/libragel_la-fsmmin.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='fsmmin.cc' object='libragel_la-fsmmin.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-fsmmin.lo `test -f 'fsmmin.cc' || echo '$(srcdir)/'`fsmmin.cc
-
-libragel_la-fsmgraph.lo: fsmgraph.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-fsmgraph.lo -MD -MP -MF $(DEPDIR)/libragel_la-fsmgraph.Tpo -c -o libragel_la-fsmgraph.lo `test -f 'fsmgraph.cc' || echo '$(srcdir)/'`fsmgraph.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-fsmgraph.Tpo $(DEPDIR)/libragel_la-fsmgraph.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='fsmgraph.cc' object='libragel_la-fsmgraph.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-fsmgraph.lo `test -f 'fsmgraph.cc' || echo '$(srcdir)/'`fsmgraph.cc
-
-libragel_la-fsmap.lo: fsmap.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-fsmap.lo -MD -MP -MF $(DEPDIR)/libragel_la-fsmap.Tpo -c -o libragel_la-fsmap.lo `test -f 'fsmap.cc' || echo '$(srcdir)/'`fsmap.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-fsmap.Tpo $(DEPDIR)/libragel_la-fsmap.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='fsmap.cc' object='libragel_la-fsmap.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-fsmap.lo `test -f 'fsmap.cc' || echo '$(srcdir)/'`fsmap.cc
-
-libragel_la-fsmcond.lo: fsmcond.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-fsmcond.lo -MD -MP -MF $(DEPDIR)/libragel_la-fsmcond.Tpo -c -o libragel_la-fsmcond.lo `test -f 'fsmcond.cc' || echo '$(srcdir)/'`fsmcond.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-fsmcond.Tpo $(DEPDIR)/libragel_la-fsmcond.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='fsmcond.cc' object='libragel_la-fsmcond.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-fsmcond.lo `test -f 'fsmcond.cc' || echo '$(srcdir)/'`fsmcond.cc
-
-libragel_la-fsmnfa.lo: fsmnfa.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-fsmnfa.lo -MD -MP -MF $(DEPDIR)/libragel_la-fsmnfa.Tpo -c -o libragel_la-fsmnfa.lo `test -f 'fsmnfa.cc' || echo '$(srcdir)/'`fsmnfa.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-fsmnfa.Tpo $(DEPDIR)/libragel_la-fsmnfa.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='fsmnfa.cc' object='libragel_la-fsmnfa.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-fsmnfa.lo `test -f 'fsmnfa.cc' || echo '$(srcdir)/'`fsmnfa.cc
-
-libragel_la-common.lo: common.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-common.lo -MD -MP -MF $(DEPDIR)/libragel_la-common.Tpo -c -o libragel_la-common.lo `test -f 'common.cc' || echo '$(srcdir)/'`common.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-common.Tpo $(DEPDIR)/libragel_la-common.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='common.cc' object='libragel_la-common.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-common.lo `test -f 'common.cc' || echo '$(srcdir)/'`common.cc
-
-libragel_la-redfsm.lo: redfsm.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-redfsm.lo -MD -MP -MF $(DEPDIR)/libragel_la-redfsm.Tpo -c -o libragel_la-redfsm.lo `test -f 'redfsm.cc' || echo '$(srcdir)/'`redfsm.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-redfsm.Tpo $(DEPDIR)/libragel_la-redfsm.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='redfsm.cc' object='libragel_la-redfsm.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-redfsm.lo `test -f 'redfsm.cc' || echo '$(srcdir)/'`redfsm.cc
-
-libragel_la-gendata.lo: gendata.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-gendata.lo -MD -MP -MF $(DEPDIR)/libragel_la-gendata.Tpo -c -o libragel_la-gendata.lo `test -f 'gendata.cc' || echo '$(srcdir)/'`gendata.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-gendata.Tpo $(DEPDIR)/libragel_la-gendata.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='gendata.cc' object='libragel_la-gendata.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-gendata.lo `test -f 'gendata.cc' || echo '$(srcdir)/'`gendata.cc
-
-libragel_la-allocgen.lo: allocgen.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-allocgen.lo -MD -MP -MF $(DEPDIR)/libragel_la-allocgen.Tpo -c -o libragel_la-allocgen.lo `test -f 'allocgen.cc' || echo '$(srcdir)/'`allocgen.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-allocgen.Tpo $(DEPDIR)/libragel_la-allocgen.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='allocgen.cc' object='libragel_la-allocgen.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-allocgen.lo `test -f 'allocgen.cc' || echo '$(srcdir)/'`allocgen.cc
-
-libragel_la-codegen.lo: codegen.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-codegen.lo -MD -MP -MF $(DEPDIR)/libragel_la-codegen.Tpo -c -o libragel_la-codegen.lo `test -f 'codegen.cc' || echo '$(srcdir)/'`codegen.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-codegen.Tpo $(DEPDIR)/libragel_la-codegen.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='codegen.cc' object='libragel_la-codegen.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-codegen.lo `test -f 'codegen.cc' || echo '$(srcdir)/'`codegen.cc
-
-libragel_la-binary.lo: binary.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-binary.lo -MD -MP -MF $(DEPDIR)/libragel_la-binary.Tpo -c -o libragel_la-binary.lo `test -f 'binary.cc' || echo '$(srcdir)/'`binary.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-binary.Tpo $(DEPDIR)/libragel_la-binary.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binary.cc' object='libragel_la-binary.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-binary.lo `test -f 'binary.cc' || echo '$(srcdir)/'`binary.cc
-
-libragel_la-bingotoloop.lo: bingotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-bingotoloop.lo -MD -MP -MF $(DEPDIR)/libragel_la-bingotoloop.Tpo -c -o libragel_la-bingotoloop.lo `test -f 'bingotoloop.cc' || echo '$(srcdir)/'`bingotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-bingotoloop.Tpo $(DEPDIR)/libragel_la-bingotoloop.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bingotoloop.cc' object='libragel_la-bingotoloop.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-bingotoloop.lo `test -f 'bingotoloop.cc' || echo '$(srcdir)/'`bingotoloop.cc
-
-libragel_la-bingotoexp.lo: bingotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-bingotoexp.lo -MD -MP -MF $(DEPDIR)/libragel_la-bingotoexp.Tpo -c -o libragel_la-bingotoexp.lo `test -f 'bingotoexp.cc' || echo '$(srcdir)/'`bingotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-bingotoexp.Tpo $(DEPDIR)/libragel_la-bingotoexp.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bingotoexp.cc' object='libragel_la-bingotoexp.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-bingotoexp.lo `test -f 'bingotoexp.cc' || echo '$(srcdir)/'`bingotoexp.cc
-
-libragel_la-binvar.lo: binvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-binvar.lo -MD -MP -MF $(DEPDIR)/libragel_la-binvar.Tpo -c -o libragel_la-binvar.lo `test -f 'binvar.cc' || echo '$(srcdir)/'`binvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-binvar.Tpo $(DEPDIR)/libragel_la-binvar.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binvar.cc' object='libragel_la-binvar.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-binvar.lo `test -f 'binvar.cc' || echo '$(srcdir)/'`binvar.cc
-
-libragel_la-binvarloop.lo: binvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-binvarloop.lo -MD -MP -MF $(DEPDIR)/libragel_la-binvarloop.Tpo -c -o libragel_la-binvarloop.lo `test -f 'binvarloop.cc' || echo '$(srcdir)/'`binvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-binvarloop.Tpo $(DEPDIR)/libragel_la-binvarloop.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binvarloop.cc' object='libragel_la-binvarloop.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-binvarloop.lo `test -f 'binvarloop.cc' || echo '$(srcdir)/'`binvarloop.cc
-
-libragel_la-binvarexp.lo: binvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-binvarexp.lo -MD -MP -MF $(DEPDIR)/libragel_la-binvarexp.Tpo -c -o libragel_la-binvarexp.lo `test -f 'binvarexp.cc' || echo '$(srcdir)/'`binvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-binvarexp.Tpo $(DEPDIR)/libragel_la-binvarexp.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binvarexp.cc' object='libragel_la-binvarexp.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-binvarexp.lo `test -f 'binvarexp.cc' || echo '$(srcdir)/'`binvarexp.cc
-
-libragel_la-flat.lo: flat.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-flat.lo -MD -MP -MF $(DEPDIR)/libragel_la-flat.Tpo -c -o libragel_la-flat.lo `test -f 'flat.cc' || echo '$(srcdir)/'`flat.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-flat.Tpo $(DEPDIR)/libragel_la-flat.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flat.cc' object='libragel_la-flat.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-flat.lo `test -f 'flat.cc' || echo '$(srcdir)/'`flat.cc
-
-libragel_la-flatgotoloop.lo: flatgotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-flatgotoloop.lo -MD -MP -MF $(DEPDIR)/libragel_la-flatgotoloop.Tpo -c -o libragel_la-flatgotoloop.lo `test -f 'flatgotoloop.cc' || echo '$(srcdir)/'`flatgotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-flatgotoloop.Tpo $(DEPDIR)/libragel_la-flatgotoloop.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatgotoloop.cc' object='libragel_la-flatgotoloop.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-flatgotoloop.lo `test -f 'flatgotoloop.cc' || echo '$(srcdir)/'`flatgotoloop.cc
-
-libragel_la-flatgotoexp.lo: flatgotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-flatgotoexp.lo -MD -MP -MF $(DEPDIR)/libragel_la-flatgotoexp.Tpo -c -o libragel_la-flatgotoexp.lo `test -f 'flatgotoexp.cc' || echo '$(srcdir)/'`flatgotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-flatgotoexp.Tpo $(DEPDIR)/libragel_la-flatgotoexp.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatgotoexp.cc' object='libragel_la-flatgotoexp.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-flatgotoexp.lo `test -f 'flatgotoexp.cc' || echo '$(srcdir)/'`flatgotoexp.cc
-
-libragel_la-flatvar.lo: flatvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-flatvar.lo -MD -MP -MF $(DEPDIR)/libragel_la-flatvar.Tpo -c -o libragel_la-flatvar.lo `test -f 'flatvar.cc' || echo '$(srcdir)/'`flatvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-flatvar.Tpo $(DEPDIR)/libragel_la-flatvar.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatvar.cc' object='libragel_la-flatvar.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-flatvar.lo `test -f 'flatvar.cc' || echo '$(srcdir)/'`flatvar.cc
-
-libragel_la-flatvarloop.lo: flatvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-flatvarloop.lo -MD -MP -MF $(DEPDIR)/libragel_la-flatvarloop.Tpo -c -o libragel_la-flatvarloop.lo `test -f 'flatvarloop.cc' || echo '$(srcdir)/'`flatvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-flatvarloop.Tpo $(DEPDIR)/libragel_la-flatvarloop.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatvarloop.cc' object='libragel_la-flatvarloop.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-flatvarloop.lo `test -f 'flatvarloop.cc' || echo '$(srcdir)/'`flatvarloop.cc
-
-libragel_la-flatvarexp.lo: flatvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-flatvarexp.lo -MD -MP -MF $(DEPDIR)/libragel_la-flatvarexp.Tpo -c -o libragel_la-flatvarexp.lo `test -f 'flatvarexp.cc' || echo '$(srcdir)/'`flatvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-flatvarexp.Tpo $(DEPDIR)/libragel_la-flatvarexp.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatvarexp.cc' object='libragel_la-flatvarexp.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-flatvarexp.lo `test -f 'flatvarexp.cc' || echo '$(srcdir)/'`flatvarexp.cc
-
-libragel_la-goto.lo: goto.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-goto.lo -MD -MP -MF $(DEPDIR)/libragel_la-goto.Tpo -c -o libragel_la-goto.lo `test -f 'goto.cc' || echo '$(srcdir)/'`goto.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-goto.Tpo $(DEPDIR)/libragel_la-goto.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='goto.cc' object='libragel_la-goto.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-goto.lo `test -f 'goto.cc' || echo '$(srcdir)/'`goto.cc
-
-libragel_la-gotoloop.lo: gotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-gotoloop.lo -MD -MP -MF $(DEPDIR)/libragel_la-gotoloop.Tpo -c -o libragel_la-gotoloop.lo `test -f 'gotoloop.cc' || echo '$(srcdir)/'`gotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-gotoloop.Tpo $(DEPDIR)/libragel_la-gotoloop.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='gotoloop.cc' object='libragel_la-gotoloop.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-gotoloop.lo `test -f 'gotoloop.cc' || echo '$(srcdir)/'`gotoloop.cc
-
-libragel_la-gotoexp.lo: gotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-gotoexp.lo -MD -MP -MF $(DEPDIR)/libragel_la-gotoexp.Tpo -c -o libragel_la-gotoexp.lo `test -f 'gotoexp.cc' || echo '$(srcdir)/'`gotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-gotoexp.Tpo $(DEPDIR)/libragel_la-gotoexp.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='gotoexp.cc' object='libragel_la-gotoexp.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-gotoexp.lo `test -f 'gotoexp.cc' || echo '$(srcdir)/'`gotoexp.cc
-
-libragel_la-ipgoto.lo: ipgoto.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-ipgoto.lo -MD -MP -MF $(DEPDIR)/libragel_la-ipgoto.Tpo -c -o libragel_la-ipgoto.lo `test -f 'ipgoto.cc' || echo '$(srcdir)/'`ipgoto.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-ipgoto.Tpo $(DEPDIR)/libragel_la-ipgoto.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='ipgoto.cc' object='libragel_la-ipgoto.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-ipgoto.lo `test -f 'ipgoto.cc' || echo '$(srcdir)/'`ipgoto.cc
-
-libragel_la-dot.lo: dot.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-dot.lo -MD -MP -MF $(DEPDIR)/libragel_la-dot.Tpo -c -o libragel_la-dot.lo `test -f 'dot.cc' || echo '$(srcdir)/'`dot.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-dot.Tpo $(DEPDIR)/libragel_la-dot.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='dot.cc' object='libragel_la-dot.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-dot.lo `test -f 'dot.cc' || echo '$(srcdir)/'`dot.cc
-
-libragel_la-asm.lo: asm.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-asm.lo -MD -MP -MF $(DEPDIR)/libragel_la-asm.Tpo -c -o libragel_la-asm.lo `test -f 'asm.cc' || echo '$(srcdir)/'`asm.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-asm.Tpo $(DEPDIR)/libragel_la-asm.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='asm.cc' object='libragel_la-asm.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-asm.lo `test -f 'asm.cc' || echo '$(srcdir)/'`asm.cc
-
-libragel_la-rlscan.lo: rlscan.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-rlscan.lo -MD -MP -MF $(DEPDIR)/libragel_la-rlscan.Tpo -c -o libragel_la-rlscan.lo `test -f 'rlscan.cc' || echo '$(srcdir)/'`rlscan.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-rlscan.Tpo $(DEPDIR)/libragel_la-rlscan.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='rlscan.cc' object='libragel_la-rlscan.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-rlscan.lo `test -f 'rlscan.cc' || echo '$(srcdir)/'`rlscan.cc
-
-libragel_la-rlparse.lo: rlparse.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-rlparse.lo -MD -MP -MF $(DEPDIR)/libragel_la-rlparse.Tpo -c -o libragel_la-rlparse.lo `test -f 'rlparse.cc' || echo '$(srcdir)/'`rlparse.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-rlparse.Tpo $(DEPDIR)/libragel_la-rlparse.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='rlparse.cc' object='libragel_la-rlparse.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-rlparse.lo `test -f 'rlparse.cc' || echo '$(srcdir)/'`rlparse.cc
-
-libragel_la-if.lo: if.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-if.lo -MD -MP -MF $(DEPDIR)/libragel_la-if.Tpo -c -o libragel_la-if.lo `test -f 'if.cc' || echo '$(srcdir)/'`if.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-if.Tpo $(DEPDIR)/libragel_la-if.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='if.cc' object='libragel_la-if.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-if.lo `test -f 'if.cc' || echo '$(srcdir)/'`if.cc
-
-libragel_la-commit.lo: commit.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT libragel_la-commit.lo -MD -MP -MF $(DEPDIR)/libragel_la-commit.Tpo -c -o libragel_la-commit.lo `test -f 'commit.cc' || echo '$(srcdir)/'`commit.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libragel_la-commit.Tpo $(DEPDIR)/libragel_la-commit.Plo
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='commit.cc' object='libragel_la-commit.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libragel_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o libragel_la-commit.lo `test -f 'commit.cc' || echo '$(srcdir)/'`commit.cc
 
 ragel-parsetree.o: parsetree.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-parsetree.o -MD -MP -MF $(DEPDIR)/ragel-parsetree.Tpo -c -o ragel-parsetree.o `test -f 'parsetree.cc' || echo '$(srcdir)/'`parsetree.cc
@@ -1715,75 +1211,33 @@ ragel-binary.obj: binary.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-binary.obj `if test -f 'binary.cc'; then $(CYGPATH_W) 'binary.cc'; else $(CYGPATH_W) '$(srcdir)/binary.cc'; fi`
 
-ragel-bingotoloop.o: bingotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-bingotoloop.o -MD -MP -MF $(DEPDIR)/ragel-bingotoloop.Tpo -c -o ragel-bingotoloop.o `test -f 'bingotoloop.cc' || echo '$(srcdir)/'`bingotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-bingotoloop.Tpo $(DEPDIR)/ragel-bingotoloop.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bingotoloop.cc' object='ragel-bingotoloop.o' libtool=no @AMDEPBACKSLASH@
+ragel-binloop.o: binloop.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-binloop.o -MD -MP -MF $(DEPDIR)/ragel-binloop.Tpo -c -o ragel-binloop.o `test -f 'binloop.cc' || echo '$(srcdir)/'`binloop.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-binloop.Tpo $(DEPDIR)/ragel-binloop.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binloop.cc' object='ragel-binloop.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-bingotoloop.o `test -f 'bingotoloop.cc' || echo '$(srcdir)/'`bingotoloop.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-binloop.o `test -f 'binloop.cc' || echo '$(srcdir)/'`binloop.cc
 
-ragel-bingotoloop.obj: bingotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-bingotoloop.obj -MD -MP -MF $(DEPDIR)/ragel-bingotoloop.Tpo -c -o ragel-bingotoloop.obj `if test -f 'bingotoloop.cc'; then $(CYGPATH_W) 'bingotoloop.cc'; else $(CYGPATH_W) '$(srcdir)/bingotoloop.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-bingotoloop.Tpo $(DEPDIR)/ragel-bingotoloop.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bingotoloop.cc' object='ragel-bingotoloop.obj' libtool=no @AMDEPBACKSLASH@
+ragel-binloop.obj: binloop.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-binloop.obj -MD -MP -MF $(DEPDIR)/ragel-binloop.Tpo -c -o ragel-binloop.obj `if test -f 'binloop.cc'; then $(CYGPATH_W) 'binloop.cc'; else $(CYGPATH_W) '$(srcdir)/binloop.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-binloop.Tpo $(DEPDIR)/ragel-binloop.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binloop.cc' object='ragel-binloop.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-bingotoloop.obj `if test -f 'bingotoloop.cc'; then $(CYGPATH_W) 'bingotoloop.cc'; else $(CYGPATH_W) '$(srcdir)/bingotoloop.cc'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-binloop.obj `if test -f 'binloop.cc'; then $(CYGPATH_W) 'binloop.cc'; else $(CYGPATH_W) '$(srcdir)/binloop.cc'; fi`
 
-ragel-bingotoexp.o: bingotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-bingotoexp.o -MD -MP -MF $(DEPDIR)/ragel-bingotoexp.Tpo -c -o ragel-bingotoexp.o `test -f 'bingotoexp.cc' || echo '$(srcdir)/'`bingotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-bingotoexp.Tpo $(DEPDIR)/ragel-bingotoexp.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bingotoexp.cc' object='ragel-bingotoexp.o' libtool=no @AMDEPBACKSLASH@
+ragel-binexp.o: binexp.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-binexp.o -MD -MP -MF $(DEPDIR)/ragel-binexp.Tpo -c -o ragel-binexp.o `test -f 'binexp.cc' || echo '$(srcdir)/'`binexp.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-binexp.Tpo $(DEPDIR)/ragel-binexp.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binexp.cc' object='ragel-binexp.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-bingotoexp.o `test -f 'bingotoexp.cc' || echo '$(srcdir)/'`bingotoexp.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-binexp.o `test -f 'binexp.cc' || echo '$(srcdir)/'`binexp.cc
 
-ragel-bingotoexp.obj: bingotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-bingotoexp.obj -MD -MP -MF $(DEPDIR)/ragel-bingotoexp.Tpo -c -o ragel-bingotoexp.obj `if test -f 'bingotoexp.cc'; then $(CYGPATH_W) 'bingotoexp.cc'; else $(CYGPATH_W) '$(srcdir)/bingotoexp.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-bingotoexp.Tpo $(DEPDIR)/ragel-bingotoexp.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='bingotoexp.cc' object='ragel-bingotoexp.obj' libtool=no @AMDEPBACKSLASH@
+ragel-binexp.obj: binexp.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-binexp.obj -MD -MP -MF $(DEPDIR)/ragel-binexp.Tpo -c -o ragel-binexp.obj `if test -f 'binexp.cc'; then $(CYGPATH_W) 'binexp.cc'; else $(CYGPATH_W) '$(srcdir)/binexp.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-binexp.Tpo $(DEPDIR)/ragel-binexp.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binexp.cc' object='ragel-binexp.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-bingotoexp.obj `if test -f 'bingotoexp.cc'; then $(CYGPATH_W) 'bingotoexp.cc'; else $(CYGPATH_W) '$(srcdir)/bingotoexp.cc'; fi`
-
-ragel-binvar.o: binvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-binvar.o -MD -MP -MF $(DEPDIR)/ragel-binvar.Tpo -c -o ragel-binvar.o `test -f 'binvar.cc' || echo '$(srcdir)/'`binvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-binvar.Tpo $(DEPDIR)/ragel-binvar.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binvar.cc' object='ragel-binvar.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-binvar.o `test -f 'binvar.cc' || echo '$(srcdir)/'`binvar.cc
-
-ragel-binvar.obj: binvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-binvar.obj -MD -MP -MF $(DEPDIR)/ragel-binvar.Tpo -c -o ragel-binvar.obj `if test -f 'binvar.cc'; then $(CYGPATH_W) 'binvar.cc'; else $(CYGPATH_W) '$(srcdir)/binvar.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-binvar.Tpo $(DEPDIR)/ragel-binvar.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binvar.cc' object='ragel-binvar.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-binvar.obj `if test -f 'binvar.cc'; then $(CYGPATH_W) 'binvar.cc'; else $(CYGPATH_W) '$(srcdir)/binvar.cc'; fi`
-
-ragel-binvarloop.o: binvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-binvarloop.o -MD -MP -MF $(DEPDIR)/ragel-binvarloop.Tpo -c -o ragel-binvarloop.o `test -f 'binvarloop.cc' || echo '$(srcdir)/'`binvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-binvarloop.Tpo $(DEPDIR)/ragel-binvarloop.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binvarloop.cc' object='ragel-binvarloop.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-binvarloop.o `test -f 'binvarloop.cc' || echo '$(srcdir)/'`binvarloop.cc
-
-ragel-binvarloop.obj: binvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-binvarloop.obj -MD -MP -MF $(DEPDIR)/ragel-binvarloop.Tpo -c -o ragel-binvarloop.obj `if test -f 'binvarloop.cc'; then $(CYGPATH_W) 'binvarloop.cc'; else $(CYGPATH_W) '$(srcdir)/binvarloop.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-binvarloop.Tpo $(DEPDIR)/ragel-binvarloop.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binvarloop.cc' object='ragel-binvarloop.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-binvarloop.obj `if test -f 'binvarloop.cc'; then $(CYGPATH_W) 'binvarloop.cc'; else $(CYGPATH_W) '$(srcdir)/binvarloop.cc'; fi`
-
-ragel-binvarexp.o: binvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-binvarexp.o -MD -MP -MF $(DEPDIR)/ragel-binvarexp.Tpo -c -o ragel-binvarexp.o `test -f 'binvarexp.cc' || echo '$(srcdir)/'`binvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-binvarexp.Tpo $(DEPDIR)/ragel-binvarexp.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binvarexp.cc' object='ragel-binvarexp.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-binvarexp.o `test -f 'binvarexp.cc' || echo '$(srcdir)/'`binvarexp.cc
-
-ragel-binvarexp.obj: binvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-binvarexp.obj -MD -MP -MF $(DEPDIR)/ragel-binvarexp.Tpo -c -o ragel-binvarexp.obj `if test -f 'binvarexp.cc'; then $(CYGPATH_W) 'binvarexp.cc'; else $(CYGPATH_W) '$(srcdir)/binvarexp.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-binvarexp.Tpo $(DEPDIR)/ragel-binvarexp.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='binvarexp.cc' object='ragel-binvarexp.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-binvarexp.obj `if test -f 'binvarexp.cc'; then $(CYGPATH_W) 'binvarexp.cc'; else $(CYGPATH_W) '$(srcdir)/binvarexp.cc'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-binexp.obj `if test -f 'binexp.cc'; then $(CYGPATH_W) 'binexp.cc'; else $(CYGPATH_W) '$(srcdir)/binexp.cc'; fi`
 
 ragel-flat.o: flat.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flat.o -MD -MP -MF $(DEPDIR)/ragel-flat.Tpo -c -o ragel-flat.o `test -f 'flat.cc' || echo '$(srcdir)/'`flat.cc
@@ -1799,75 +1253,33 @@ ragel-flat.obj: flat.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flat.obj `if test -f 'flat.cc'; then $(CYGPATH_W) 'flat.cc'; else $(CYGPATH_W) '$(srcdir)/flat.cc'; fi`
 
-ragel-flatgotoloop.o: flatgotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatgotoloop.o -MD -MP -MF $(DEPDIR)/ragel-flatgotoloop.Tpo -c -o ragel-flatgotoloop.o `test -f 'flatgotoloop.cc' || echo '$(srcdir)/'`flatgotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatgotoloop.Tpo $(DEPDIR)/ragel-flatgotoloop.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatgotoloop.cc' object='ragel-flatgotoloop.o' libtool=no @AMDEPBACKSLASH@
+ragel-flatloop.o: flatloop.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatloop.o -MD -MP -MF $(DEPDIR)/ragel-flatloop.Tpo -c -o ragel-flatloop.o `test -f 'flatloop.cc' || echo '$(srcdir)/'`flatloop.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatloop.Tpo $(DEPDIR)/ragel-flatloop.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatloop.cc' object='ragel-flatloop.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatgotoloop.o `test -f 'flatgotoloop.cc' || echo '$(srcdir)/'`flatgotoloop.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatloop.o `test -f 'flatloop.cc' || echo '$(srcdir)/'`flatloop.cc
 
-ragel-flatgotoloop.obj: flatgotoloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatgotoloop.obj -MD -MP -MF $(DEPDIR)/ragel-flatgotoloop.Tpo -c -o ragel-flatgotoloop.obj `if test -f 'flatgotoloop.cc'; then $(CYGPATH_W) 'flatgotoloop.cc'; else $(CYGPATH_W) '$(srcdir)/flatgotoloop.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatgotoloop.Tpo $(DEPDIR)/ragel-flatgotoloop.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatgotoloop.cc' object='ragel-flatgotoloop.obj' libtool=no @AMDEPBACKSLASH@
+ragel-flatloop.obj: flatloop.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatloop.obj -MD -MP -MF $(DEPDIR)/ragel-flatloop.Tpo -c -o ragel-flatloop.obj `if test -f 'flatloop.cc'; then $(CYGPATH_W) 'flatloop.cc'; else $(CYGPATH_W) '$(srcdir)/flatloop.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatloop.Tpo $(DEPDIR)/ragel-flatloop.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatloop.cc' object='ragel-flatloop.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatgotoloop.obj `if test -f 'flatgotoloop.cc'; then $(CYGPATH_W) 'flatgotoloop.cc'; else $(CYGPATH_W) '$(srcdir)/flatgotoloop.cc'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatloop.obj `if test -f 'flatloop.cc'; then $(CYGPATH_W) 'flatloop.cc'; else $(CYGPATH_W) '$(srcdir)/flatloop.cc'; fi`
 
-ragel-flatgotoexp.o: flatgotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatgotoexp.o -MD -MP -MF $(DEPDIR)/ragel-flatgotoexp.Tpo -c -o ragel-flatgotoexp.o `test -f 'flatgotoexp.cc' || echo '$(srcdir)/'`flatgotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatgotoexp.Tpo $(DEPDIR)/ragel-flatgotoexp.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatgotoexp.cc' object='ragel-flatgotoexp.o' libtool=no @AMDEPBACKSLASH@
+ragel-flatexp.o: flatexp.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatexp.o -MD -MP -MF $(DEPDIR)/ragel-flatexp.Tpo -c -o ragel-flatexp.o `test -f 'flatexp.cc' || echo '$(srcdir)/'`flatexp.cc
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatexp.Tpo $(DEPDIR)/ragel-flatexp.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatexp.cc' object='ragel-flatexp.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatgotoexp.o `test -f 'flatgotoexp.cc' || echo '$(srcdir)/'`flatgotoexp.cc
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatexp.o `test -f 'flatexp.cc' || echo '$(srcdir)/'`flatexp.cc
 
-ragel-flatgotoexp.obj: flatgotoexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatgotoexp.obj -MD -MP -MF $(DEPDIR)/ragel-flatgotoexp.Tpo -c -o ragel-flatgotoexp.obj `if test -f 'flatgotoexp.cc'; then $(CYGPATH_W) 'flatgotoexp.cc'; else $(CYGPATH_W) '$(srcdir)/flatgotoexp.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatgotoexp.Tpo $(DEPDIR)/ragel-flatgotoexp.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatgotoexp.cc' object='ragel-flatgotoexp.obj' libtool=no @AMDEPBACKSLASH@
+ragel-flatexp.obj: flatexp.cc
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatexp.obj -MD -MP -MF $(DEPDIR)/ragel-flatexp.Tpo -c -o ragel-flatexp.obj `if test -f 'flatexp.cc'; then $(CYGPATH_W) 'flatexp.cc'; else $(CYGPATH_W) '$(srcdir)/flatexp.cc'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatexp.Tpo $(DEPDIR)/ragel-flatexp.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatexp.cc' object='ragel-flatexp.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatgotoexp.obj `if test -f 'flatgotoexp.cc'; then $(CYGPATH_W) 'flatgotoexp.cc'; else $(CYGPATH_W) '$(srcdir)/flatgotoexp.cc'; fi`
-
-ragel-flatvar.o: flatvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatvar.o -MD -MP -MF $(DEPDIR)/ragel-flatvar.Tpo -c -o ragel-flatvar.o `test -f 'flatvar.cc' || echo '$(srcdir)/'`flatvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatvar.Tpo $(DEPDIR)/ragel-flatvar.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatvar.cc' object='ragel-flatvar.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatvar.o `test -f 'flatvar.cc' || echo '$(srcdir)/'`flatvar.cc
-
-ragel-flatvar.obj: flatvar.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatvar.obj -MD -MP -MF $(DEPDIR)/ragel-flatvar.Tpo -c -o ragel-flatvar.obj `if test -f 'flatvar.cc'; then $(CYGPATH_W) 'flatvar.cc'; else $(CYGPATH_W) '$(srcdir)/flatvar.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatvar.Tpo $(DEPDIR)/ragel-flatvar.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatvar.cc' object='ragel-flatvar.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatvar.obj `if test -f 'flatvar.cc'; then $(CYGPATH_W) 'flatvar.cc'; else $(CYGPATH_W) '$(srcdir)/flatvar.cc'; fi`
-
-ragel-flatvarloop.o: flatvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatvarloop.o -MD -MP -MF $(DEPDIR)/ragel-flatvarloop.Tpo -c -o ragel-flatvarloop.o `test -f 'flatvarloop.cc' || echo '$(srcdir)/'`flatvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatvarloop.Tpo $(DEPDIR)/ragel-flatvarloop.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatvarloop.cc' object='ragel-flatvarloop.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatvarloop.o `test -f 'flatvarloop.cc' || echo '$(srcdir)/'`flatvarloop.cc
-
-ragel-flatvarloop.obj: flatvarloop.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatvarloop.obj -MD -MP -MF $(DEPDIR)/ragel-flatvarloop.Tpo -c -o ragel-flatvarloop.obj `if test -f 'flatvarloop.cc'; then $(CYGPATH_W) 'flatvarloop.cc'; else $(CYGPATH_W) '$(srcdir)/flatvarloop.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatvarloop.Tpo $(DEPDIR)/ragel-flatvarloop.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatvarloop.cc' object='ragel-flatvarloop.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatvarloop.obj `if test -f 'flatvarloop.cc'; then $(CYGPATH_W) 'flatvarloop.cc'; else $(CYGPATH_W) '$(srcdir)/flatvarloop.cc'; fi`
-
-ragel-flatvarexp.o: flatvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatvarexp.o -MD -MP -MF $(DEPDIR)/ragel-flatvarexp.Tpo -c -o ragel-flatvarexp.o `test -f 'flatvarexp.cc' || echo '$(srcdir)/'`flatvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatvarexp.Tpo $(DEPDIR)/ragel-flatvarexp.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatvarexp.cc' object='ragel-flatvarexp.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatvarexp.o `test -f 'flatvarexp.cc' || echo '$(srcdir)/'`flatvarexp.cc
-
-ragel-flatvarexp.obj: flatvarexp.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-flatvarexp.obj -MD -MP -MF $(DEPDIR)/ragel-flatvarexp.Tpo -c -o ragel-flatvarexp.obj `if test -f 'flatvarexp.cc'; then $(CYGPATH_W) 'flatvarexp.cc'; else $(CYGPATH_W) '$(srcdir)/flatvarexp.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-flatvarexp.Tpo $(DEPDIR)/ragel-flatvarexp.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='flatvarexp.cc' object='ragel-flatvarexp.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatvarexp.obj `if test -f 'flatvarexp.cc'; then $(CYGPATH_W) 'flatvarexp.cc'; else $(CYGPATH_W) '$(srcdir)/flatvarexp.cc'; fi`
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-flatexp.obj `if test -f 'flatexp.cc'; then $(CYGPATH_W) 'flatexp.cc'; else $(CYGPATH_W) '$(srcdir)/flatexp.cc'; fi`
 
 ragel-goto.o: goto.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-goto.o -MD -MP -MF $(DEPDIR)/ragel-goto.Tpo -c -o ragel-goto.o `test -f 'goto.cc' || echo '$(srcdir)/'`goto.cc
@@ -1980,20 +1392,6 @@ ragel-rlparse.obj: rlparse.cc
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='rlparse.cc' object='ragel-rlparse.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-rlparse.obj `if test -f 'rlparse.cc'; then $(CYGPATH_W) 'rlparse.cc'; else $(CYGPATH_W) '$(srcdir)/rlparse.cc'; fi`
-
-ragel-if.o: if.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-if.o -MD -MP -MF $(DEPDIR)/ragel-if.Tpo -c -o ragel-if.o `test -f 'if.cc' || echo '$(srcdir)/'`if.cc
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-if.Tpo $(DEPDIR)/ragel-if.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='if.cc' object='ragel-if.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-if.o `test -f 'if.cc' || echo '$(srcdir)/'`if.cc
-
-ragel-if.obj: if.cc
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-if.obj -MD -MP -MF $(DEPDIR)/ragel-if.Tpo -c -o ragel-if.obj `if test -f 'if.cc'; then $(CYGPATH_W) 'if.cc'; else $(CYGPATH_W) '$(srcdir)/if.cc'; fi`
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ragel-if.Tpo $(DEPDIR)/ragel-if.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='if.cc' object='ragel-if.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o ragel-if.obj `if test -f 'if.cc'; then $(CYGPATH_W) 'if.cc'; else $(CYGPATH_W) '$(srcdir)/if.cc'; fi`
 
 ragel-commit.o: commit.cc
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(ragel_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT ragel-commit.o -MD -MP -MF $(DEPDIR)/ragel-commit.Tpo -c -o ragel-commit.o `test -f 'commit.cc' || echo '$(srcdir)/'`commit.cc
@@ -2283,10 +1681,8 @@ version.h: Makefile
 	echo '#define PUBDATE "$(PUBDATE)"' >> version.h
 
 parse.c: rlparse.lm reducer.lm $(RAGEL_LM) $(COLM_BINDEP)
-	$(COLM) -c -b rlparse_object -o $@ -e if.h -x if.cc -m commit.cc $<
+	$(COLM) -c -b rlparse_object -o $@ -m commit.cc $<
 
-if.cc: parse.c
-if.h: parse.c
 commit.cc: parse.c
 
 # These are necessary because we are not using built sources. They create the
@@ -2296,11 +1692,6 @@ ragel-if.$(OBJEXT): parse.c
 ragel-load.$(OBJEXT): parse.c
 ragel-commit.$(OBJEXT): parse.c
 ragel-reducer.$(OBJEXT): parse.c
-
-libragel_la-if.$(LOEXT): parse.c
-libragel_la-load.$(LOEXT): parse.c
-libragel_la-commit.$(LOEXT): parse.c
-libragel_la-reducer.$(LOEXT): parse.c
 
 rlhc.c: rlhc.lm $(RLHC) $(COLM_BINDEP)
 	$(COLM) -c -b rlhc_object -o $@ $<

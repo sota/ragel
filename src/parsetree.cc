@@ -1,22 +1,23 @@
 /*
- *  Copyright 2001-2006 Adrian Thurston <thurston@complang.org>
- */
-
-/*  This file is part of Ragel.
+ * Copyright 2001-2006 Adrian Thurston <thurston@colm.net>
  *
- *  Ragel is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- * 
- *  Ragel is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with Ragel; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #include <iostream>
@@ -1665,10 +1666,6 @@ FsmRes FactorWithRep::walk( ParseData *pd )
 			return factorTree;
 		
 		if ( factorTree.fsm->startState->isFinState() ) {
-			if ( pd->id->inLibRagel ) {
-				delete factorTree.fsm;
-				return FsmRes( FsmRes::RepetitionError() );
-			}
 			pd->id->warning(loc) << "applying kleene star to a machine that "
 					"accepts zero length word" << endl;
 			factorTree.fsm->unsetFinState( factorTree.fsm->startState );
@@ -1683,10 +1680,6 @@ FsmRes FactorWithRep::walk( ParseData *pd )
 			return factorTree;
 
 		if ( factorTree.fsm->startState->isFinState() ) {
-			if ( pd->id->inLibRagel ) {
-				delete factorTree.fsm;
-				return FsmRes( FsmRes::RepetitionError() );
-			}
 			pd->id->warning(loc) << "applying kleene star to a machine that "
 					"accepts zero length word" << endl;
 		}
@@ -1720,10 +1713,6 @@ FsmRes FactorWithRep::walk( ParseData *pd )
 			return factorTree;
 
 		if ( factorTree.fsm->startState->isFinState() ) {
-			if ( pd->id->inLibRagel ) {
-				delete factorTree.fsm;
-				return FsmRes( FsmRes::RepetitionError() );
-			}
 			pd->id->warning(loc) << "applying plus operator to a machine that "
 					"accepts zero length word" << endl;
 		}
@@ -1740,18 +1729,11 @@ FsmRes FactorWithRep::walk( ParseData *pd )
 		if ( lowerRep == 0 ) {
 			/* No copies. Don't need to evaluate the factorWithRep. 
 			 * This Defeats the purpose so give a warning. */
-			if ( pd->id->inLibRagel )
-				return FsmRes( FsmRes::RepetitionError() );
-
 			pd->id->warning(loc) << "exactly zero repetitions results "
 					"in the null machine" << endl;
 		}
 		else {
 			if ( factorTree.fsm->startState->isFinState() ) {
-				if ( pd->id->inLibRagel ) {
-					delete factorTree.fsm;
-					return FsmRes( FsmRes::RepetitionError() );
-				}
 				pd->id->warning(loc) << "applying repetition to a machine that "
 						"accepts zero length word" << endl;
 			}
@@ -1770,9 +1752,6 @@ FsmRes FactorWithRep::walk( ParseData *pd )
 		if ( upperRep == 0 ) {
 			/* No copies. Don't need to evaluate the factorWithRep. 
 			 * This Defeats the purpose so give a warning. */
-			if ( pd->id->inLibRagel )
-				return FsmRes( FsmRes::RepetitionError() );
-
 			pd->id->warning(loc) << "max zero repetitions results "
 					"in the null machine" << endl;
 
@@ -1781,10 +1760,6 @@ FsmRes FactorWithRep::walk( ParseData *pd )
 		else {
 
 			if ( factorTree.fsm->startState->isFinState() ) {
-				if ( pd->id->inLibRagel ) {
-					delete factorTree.fsm;
-					return FsmRes( FsmRes::RepetitionError() );
-				}
 				pd->id->warning(loc) << "applying max repetition to a machine that "
 						"accepts zero length word" << endl;
 			}
@@ -1800,10 +1775,6 @@ FsmRes FactorWithRep::walk( ParseData *pd )
 			return factorTree;
 
 		if ( factorTree.fsm->startState->isFinState() ) {
-			if ( pd->id->inLibRagel ) {
-				delete factorTree.fsm;
-				return FsmRes( FsmRes::RepetitionError() );
-			}
 			pd->id->warning(loc) << "applying min repetition to a machine that "
 					"accepts zero length word" << endl;
 		}
@@ -1827,19 +1798,12 @@ FsmRes FactorWithRep::walk( ParseData *pd )
 		if ( lowerRep == 0 && upperRep == 0 ) {
 			/* No copies. Don't need to evaluate the factorWithRep.  This
 			 * defeats the purpose so give a warning. */
-			if ( pd->id->inLibRagel )
-				return FsmRes( FsmRes::RepetitionError() );
-
 			pd->id->warning(loc) << "zero to zero repetitions results "
 					"in the null machine" << endl;
 		}
 		else {
 
 			if ( factorTree.fsm->startState->isFinState() ) {
-				if ( pd->id->inLibRagel ) {
-					delete factorTree.fsm;
-					return FsmRes( FsmRes::RepetitionError() );
-				}
 				pd->id->warning(loc) << "applying range repetition to a machine that "
 						"accepts zero length word" << endl;
 			}
@@ -2027,10 +1991,6 @@ FsmRes Factor::walk( ParseData *pd )
 			return exprTree;
 
 		if ( exprTree.fsm->startState->isFinState() ) {
-			if ( pd->id->inLibRagel ) {
-				delete exprTree.fsm;
-				return FsmRes( FsmRes::RepetitionError() );
-			}
 			pd->id->warning(loc) << "applying plus operator to a machine that "
 					"accepts zero length word" << endl;
 		}
@@ -2043,10 +2003,6 @@ FsmRes Factor::walk( ParseData *pd )
 			return exprTree;
 
 		if ( exprTree.fsm->startState->isFinState() ) {
-			if ( pd->id->inLibRagel ) {
-				delete exprTree.fsm;
-				return FsmRes( FsmRes::RepetitionError() );
-			}
 			pd->id->warning(loc) << "applying plus operator to a machine that "
 					"accepts zero length word" << endl;
 		}
@@ -2305,11 +2261,6 @@ FsmRes ReItem::walk( ParseData *pd, RegExpr *rootRegex )
 	/* If the item is followed by a star, then apply the star op. */
 	if ( star ) {
 		if ( rtnVal->startState->isFinState() ) {
-			if ( pd->id->inLibRagel ) {
-				delete rtnVal;
-				return FsmRes( FsmRes::RepetitionError() );
-			}
-
 			pd->id->warning(loc) << "applying kleene star to a machine that "
 					"accepts zero length word" << endl;
 		}

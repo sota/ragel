@@ -1,22 +1,23 @@
 /*
- *  Copyright 2001-2014 Adrian Thurston <thurston@complang.org>
- */
-
-/*  This file is part of Ragel.
+ * Copyright 2001-2014 Adrian Thurston <thurston@colm.net>
  *
- *  Ragel is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- * 
- *  Ragel is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- * 
- *  You should have received a copy of the GNU General Public License
- *  along with Ragel; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to
+ * deal in the Software without restriction, including without limitation the
+ * rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+ * sell copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #include "codegen.h"
@@ -92,75 +93,41 @@ void TableArray::valueAnalyze( long long v )
 
 void TableArray::finishAnalyze()
 {
-	if ( codeGen.backend == Direct ) {
-		/* Calculate the type if it is not already set. */
-		if ( type.empty() ) {
-			if ( min >= S8BIT_MIN && max <= S8BIT_MAX ) {
-				type = "char";
-				width = sizeof(char);
-			}
-			else if ( min >= S16BIT_MIN && max <= S16BIT_MAX ) {
-				type = "short";
-				width = sizeof(short);
-			}
-			else if ( min >= S32BIT_MIN && max <= S32BIT_MAX ) {
-				type = "int";
-				width = sizeof(int);
-			}
-			else if ( min >= S64BIT_MAX && max <= S64BIT_MAX ) {
-				type = "long";
-				width = sizeof(long);
-			}
-			else  {
-				type = "long long";
-				width = sizeof(long long);
-			}
+	/* Calculate the type if it is not already set. */
+	if ( type.empty() ) {
+		if ( min >= S8BIT_MIN && max <= S8BIT_MAX ) {
+			type = "char";
+			width = sizeof(char);
 		}
-	}
-	else {
-		/* Calculate the type if it is not already set. */
-		if ( type.empty() ) {
-			if ( min >= S8BIT_MIN && max <= S8BIT_MAX ) {
-				type = "s8";
-				width = sizeof(char);
-			}
-			else if ( min >= S16BIT_MIN && max <= S16BIT_MAX ) {
-				type = "s16";
-				width = sizeof(short);
-			}
-			else if ( min >= S32BIT_MIN && max <= S32BIT_MAX ) {
-				type = "s32";
-				width = sizeof(int);
-			}
-			else if ( min >= S64BIT_MAX && max <= S64BIT_MAX ) {
-				type = "s64";
-				width = sizeof(long);
-			}
-			else  {
-				type = "s128";
-				width = sizeof(long long);
-			}
+		else if ( min >= S16BIT_MIN && max <= S16BIT_MAX ) {
+			type = "short";
+			width = sizeof(short);
+		}
+		else if ( min >= S32BIT_MIN && max <= S32BIT_MAX ) {
+			type = "int";
+			width = sizeof(int);
+		}
+		else if ( min >= S64BIT_MAX && max <= S64BIT_MAX ) {
+			type = "long";
+			width = sizeof(long);
+		}
+		else  {
+			type = "long long";
+			width = sizeof(long long);
 		}
 	}
 }
 
 void TableArray::startGenerate()
 {
-	if ( codeGen.backend == Direct ) {
-		if ( stringTables ) {
-			out << "static const char S_" << codeGen.DATA_PREFIX() << name <<
-				"[] __attribute__((aligned (16))) = \n\t\"";
-		}
-		else {
-			out << "static const " << type << " " << 
-				"_" << codeGen.DATA_PREFIX() << name << 
-				"[] = {\n\t";
-		}
+	if ( stringTables ) {
+		out << "static const char S_" << codeGen.DATA_PREFIX() << name <<
+			"[] __attribute__((aligned (16))) = \n\t\"";
 	}
 	else {
-		out << "array " << type << " " << 
+		out << "static const " << type << " " << 
 			"_" << codeGen.DATA_PREFIX() << name << 
-			"( " << min << ", " << max << " ) = { ";
+			"[] = {\n\t";
 	}
 }
 
@@ -212,67 +179,46 @@ void TableArray::stringGenerate( long long value )
 
 void TableArray::valueGenerate( long long v )
 {
-	if ( codeGen.backend == Direct ) {
-		if ( stringTables ) {
-			stringGenerate( v );
+	if ( stringTables ) {
+		stringGenerate( v );
 
-			if ( ++ln % iall == 0 ) {
-				out << "\"\n\t\"";
-				ln = 0;
-			}
-		}
-		else {
-			if ( isChar )
-				out << "c(" << v << ")";
-			else if ( !isSigned )
-				out << v << "u";
-			else
-				out << v;
-
-			if ( ( ++ln % iall ) == 0 ) {
-				out << ",\n\t";
-				ln = 0;
-			}
-			else {
-				out << ", ";
-			}
+		if ( ++ln % iall == 0 ) {
+			out << "\"\n\t\"";
+			ln = 0;
 		}
 	}
 	else {
 		if ( isChar )
 			out << "c(" << v << ")";
 		else if ( !isSigned )
-			out << "u(" << v << ")";
+			out << v << "u";
 		else
 			out << v;
-		out << ", ";
+
+		if ( ( ++ln % iall ) == 0 ) {
+			out << ",\n\t";
+			ln = 0;
+		}
+		else {
+			out << ", ";
+		}
 	}
 }
 
 void TableArray::finishGenerate()
 {
-	if ( codeGen.backend == Direct ) {
-		if ( stringTables ) {
-	        out << "\";\nconst " << type << " *_" << codeGen.DATA_PREFIX() << name <<
-	                " = (const " << type << "*) S_" << codeGen.DATA_PREFIX() << name << ";\n\n";
+	if ( stringTables ) {
+		out << "\";\nconst " << type << " *_" << codeGen.DATA_PREFIX() << name <<
+				" = (const " << type << "*) S_" << codeGen.DATA_PREFIX() << name << ";\n\n";
 
-		}
-		else {
-			if ( isChar )
-				out << "c(0)\n};\n\n";
-			else if ( !isSigned )
-				out << "0u\n};\n\n";
-			else
-				out << "0\n};\n\n";
-		}
 	}
 	else {
 		if ( isChar )
-			out << "c(0) };\n\n";
+			out << "c(0)\n};\n\n";
 		else if ( !isSigned )
-			out << "u(0) };\n\n";
+			out << "0u\n};\n\n";
 		else
-			out << "0 };\n\n";
+			out << "0\n};\n\n";
 	}
 
 	if ( codeGen.red->id->printStatistics ) {
@@ -330,7 +276,6 @@ CodeGen::CodeGen( const CodeGenArgs &args )
 :
 	CodeGenData( args ),
 	tableData( 0 ),
-	backend( args.id->backend ),
 	stringTables( args.id->stringTables )
 {
 }
@@ -344,10 +289,7 @@ void CodeGen::statsSummary()
 
 string CodeGen::CAST( string type )
 {
-	if ( backend == Direct )
-		return "(" + type + ")";
-	else
-		return "cast(" + type + ")";
+	return "(" + type + ")";
 }
 
 /* Write out the fsm name. */
@@ -526,26 +468,14 @@ string CodeGen::TABS( int level )
  * signed. */
 string CodeGen::KEY( Key key )
 {
-	if ( backend == Direct ) {
-		ostringstream ret;
-		if ( alphType->isChar )
-			ret << "c(" << (unsigned long) key.getVal() << ")";
-		else if ( keyOps->isSigned || !keyOps->explicitUnsigned )
-			ret << key.getVal();
-		else
-			ret << (unsigned long) key.getVal() << "u";
-		return ret.str();
-	}
-	else {
-		ostringstream ret;
-		if ( alphType->isChar )
-			ret << "c(" << (unsigned long) key.getVal() << ")";
-		else if ( keyOps->isSigned || !keyOps->explicitUnsigned )
-			ret << key.getVal();
-		else
-			ret << "u(" << (unsigned long) key.getVal() << ")";
-		return ret.str();
-	}
+	ostringstream ret;
+	if ( alphType->isChar )
+		ret << "c(" << (unsigned long) key.getVal() << ")";
+	else if ( keyOps->isSigned || !keyOps->explicitUnsigned )
+		ret << key.getVal();
+	else
+		ret << (unsigned long) key.getVal() << "u";
+	return ret.str();
 }
 
 bool CodeGen::isAlphTypeSigned()
@@ -697,6 +627,25 @@ void CodeGen::GEN_EXPR( ostream &ret, GenInlineItem *item,
 	}
 }
 
+void CodeGen::INLINE_EXPR( ostream &ret, GenInlineList *inlineList )
+{
+	ret << OPEN_HOST_EXPR();
+	INLINE_LIST( ret, inlineList, 0, false, false );
+	ret << CLOSE_HOST_EXPR();
+}
+
+void CodeGen::INLINE_BLOCK( ostream &ret, GenInlineExpr *inlineExpr )
+{
+	out << OPEN_HOST_BLOCK( inlineExpr );
+	INLINE_LIST( out, inlineExpr->inlineList, 0, false, false );
+	out << CLOSE_HOST_BLOCK();
+}
+
+void CodeGen::INLINE_PLAIN( ostream &ret, GenInlineExpr *inlineExpr )
+{
+
+}
+
 /* Write out an inline tree structure. Walks the list and possibly calls out
  * to virtual functions than handle language specific items in the tree. */
 void CodeGen::INLINE_LIST( ostream &ret, GenInlineList *inlineList, 
@@ -828,6 +777,15 @@ string CodeGen::LDIR_PATH( char *path )
 			ret << *pc;
 	}
 	return ret.str();
+}
+
+void CodeGen::EOF_CHECK( ostream &ret )
+{
+	ret << 
+		"	if ( " << P() << " == " << PE() << " )\n"
+		"		goto _test_eof;\n";
+
+	testEofUsed = true;
 }
 
 void CodeGen::ACTION( ostream &ret, GenAction *action, IlOpts opts )
@@ -968,10 +926,7 @@ string CodeGen::ALPH_TYPE()
 
 void CodeGen::VALUE( string type, string name, string value )
 {
-	if ( backend == Direct )
-		out << "static const " << type << " " << name << " = " << value << ";\n";
-	else
-		out << "value " << type << " " << name << " = " << value << ";\n";
+	out << "static const " << type << " " << name << " = " << value << ";\n";
 }
 
 string CodeGen::STR( int v )
